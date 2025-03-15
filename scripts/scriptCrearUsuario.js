@@ -168,22 +168,14 @@ formulario.addEventListener("submit", async function(event) {
         const resultado = await respuesta.json();
 
         if (respuesta.ok) {
-            // Guardar en localStorage
-            localStorage.setItem('nombreUsuario', nombreUsuario.value);
-            localStorage.setItem('correo', correo.value);
-            localStorage.setItem('edad', edad.value);
-            localStorage.setItem('ciudad', ciudad.value);
-            localStorage.setItem('pass', pass.value);
+            localStorage.setItem('usuario', JSON.stringify(datos));
+            localStorage.setItem('origen', 'crear');
+            const usuarioGuardado = localStorage.getItem("usuario");
 
-            // Verificar si se guardaron correctamente
-            if (
-                localStorage.getItem('nombreUsuario') === nombreUsuario.value &&
-                localStorage.getItem('correo') === correo.value &&
-                localStorage.getItem('edad') === edad.value &&
-                localStorage.getItem('ciudad') === ciudad.value &&
-                localStorage.getItem('pass') === pass.value
-            ) {
-                window.location.href = "../busqueda.html"; // Redirección tras registro exitoso
+            if (usuarioGuardado) {
+                console.log("Usuario guardado:", JSON.parse(usuarioGuardado));
+
+                window.location.href = "../busqueda.html";  // Redirección tras registro exitoso
             } else {
                 alert("Error al almacenar los datos");
             }
@@ -192,6 +184,6 @@ formulario.addEventListener("submit", async function(event) {
         }
     } catch (error) {
         console.error("Error de conexión:", error);
+        alert("Hubo un problema con la conexión.");
     }
-   
 });

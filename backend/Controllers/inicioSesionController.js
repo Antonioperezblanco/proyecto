@@ -21,7 +21,19 @@ export const inicioSesion = async (req, res) => {
         }
 
         console.log("Autenticación exitosa, redirigiendo...");  // Verifica que el código pase esta parte
-        res.status(200).json({ mensaje: 'Inicio de sesión exitoso' });
+
+        const usuarioData = {
+            nombreUsuario: usuario.nombreUsuario,
+            correo: usuario.correo,
+            edad: usuario.edad,
+            ciudad: usuario.ciudad,
+            pass: usuario.pass
+        };
+
+        res.status(200).json({ 
+            mensaje: 'Inicio de sesión exitoso',
+            usuario: usuarioData
+        });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ mensaje: 'Error al iniciar sesión', error: error.message });
