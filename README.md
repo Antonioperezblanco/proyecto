@@ -6,5 +6,5 @@ Install mongodb + npm modules
 - Pagina final
 - Mejorar frontend
 - Añadir amigos
-- LocalStorage desde login
 - Notificaciones
+- Recordar contraseña
