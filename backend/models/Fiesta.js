@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import mongooseSequence from 'mongoose-sequence';
+
 
 const fiestaSchema = new mongoose.Schema({
-    idFiesta: { type: Number },
     ciudad: { type: String, required: true },
     localizacion: { type: String, required: true },
     hora: { type: String, required: true },
@@ -15,7 +14,7 @@ const fiestaSchema = new mongoose.Schema({
     contador: { type: Number, default: 0 },
 }, {timestamps: true}); 
 
-fiestaSchema.plugin(mongooseSequence(mongoose), {inc_field: 'idFiesta'});
+
 
 fiestaSchema.methods.mostrarInfo = function () {
     return `

@@ -1,14 +1,12 @@
 import express from 'express';
-import { crearUsuario } from '../Controllers/crearUsuarioController.js';
-import { inicioSesion } from '../Controllers/inicioSesionController.js';
-import { editarUsuario } from '../Controllers/busquedaController.js';
+import { crearUsuario, inicioSesion, editarUsuario } from '../Controllers/usuarioController.js';
 const router = express.Router();
 
 router.post('/crear', crearUsuario);
     
 router.post ('/inicioSesion', inicioSesion);
 
-router.post ('/editarUsuario', editarUsuario);
+router.put ('/editarUsuario', editarUsuario);
     
 export default router;
  

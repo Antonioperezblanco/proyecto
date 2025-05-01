@@ -5,8 +5,8 @@ import usuarioRoutes from './backend/routes/usuarioRoutes.js';
 import fiestaRoutes from './backend/routes/fiestaRoutes.js';
 
 const app = express();
-
-connectDB();
+const url = "mongodb://127.0.0.1/proyecto"; 
+connectDB(url);
 
 app.use(cors({
     origin: 'http://127.0.0.1:5500',

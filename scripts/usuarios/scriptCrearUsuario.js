@@ -168,14 +168,14 @@ formulario.addEventListener("submit", async function(event) {
         const resultado = await respuesta.json();
 
         if (respuesta.ok) {
-            localStorage.setItem('usuario', JSON.stringify(datos));
-            localStorage.setItem('origen', 'crear');
-            const usuarioGuardado = localStorage.getItem("usuario");
+            sessionStorage.setItem('usuario', JSON.stringify(datos));
+            sessionStorage.setItem('origen', 'crear');
+            const usuarioGuardado = sessionStorage.getItem("usuario");
 
             if (usuarioGuardado) {
                 console.log("Usuario guardado:", JSON.parse(usuarioGuardado));
 
-                window.location.href = "../busqueda.html";  // Redirección tras registro exitoso
+                window.location.href = "/frontend/views/index/busqueda.html";  // Redirección tras registro exitoso
             } else {
                 alert("Error al almacenar los datos");
             }

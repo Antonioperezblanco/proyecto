@@ -114,11 +114,11 @@ formInicio.addEventListener("submit", async function(event) {
 
         if (respuesta.ok) {
             const usuario =  resultado.usuario;
-            localStorage.setItem("usuario", JSON.stringify(usuario));
-            localStorage.setItem('origen', 'inicio');
+            sessionStorage.setItem("usuario", JSON.stringify(usuario));
+            sessionStorage.setItem('origen', 'inicio');
 
-            if (localStorage.getItem("usuario")){
-                  window.location.href = "../busqueda.html";  
+            if (sessionStorage.getItem("usuario")){
+                  window.location.href = "/frontend/views/index/busqueda.html";  
             } else {
                 alert("Error al almacenar los datos")
             }

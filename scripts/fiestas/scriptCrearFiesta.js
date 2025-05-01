@@ -1,28 +1,7 @@
-//Meter el header
+if (sessionStorage.getItem("origen") == "inicio" || sessionStorage.getItem("origen") == "crear"){
 
-document.addEventListener("DOMContentLoaded", function() {
-            
-    fetch('../parts/header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('header-container').innerHTML = data;
 
-            // Después de cargar el header, buscar el elemento #info
-            const info = document.getElementById('info');
-            if (info) {
-                const nombreUsuario = localStorage.getItem('nombreUsuario') || "Usuario no encontrado";
-                info.textContent = nombreUsuario;
-                console.log("Nombre de usuario cargado:", nombreUsuario);
-            } else {
-                console.error("Elemento con id 'info' no encontrado.");
-            }
-        })
-        .catch(error => console.error('Error cargando el header:', error));
-
-    console.log(localStorage.getItem('nombre'));
-});
-   
-   const formFiesta = document.querySelector("form")
+    const formFiesta = document.querySelector("form")
 
 
     //Campos a rellenar
@@ -55,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const horaErr = document.getElementById("horaErr");
     const vestimentaErr = document.getElementById("vestimentaErr");
     const tipoMusicaErr = document.getElementById("musicaErr");
-    const precioDiscoErr = document.getElementById("precioDiscotecaErr");
     const combinadoErr = document.getElementById("combinadoErr");
     const cervezaErr = document.getElementById("cervezaErr");
     const refrescoErr = document.getElementById("refrescoErr");
@@ -117,7 +95,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 checkValidations();
             });
             inputPrecio.addEventListener("input", ()  => {
-                spanPrecio.textContent = inputPrecio.value  ? "" : "Debe introducir un precio de discoteca";
+                if (!inputPrecio.value){
+                    spanPrecio.textContent ="Debe introducir un precio de la discoteca";
+                } else if(inputPrecio.value <0) {
+                    spanPrecio.textContent = "El precio no puede ser negativo"
+                } else {
+                    spanPrecio.textContent = "";
+                }
                 checkValidations();
             });
             
@@ -332,7 +316,7 @@ formFiesta.addEventListener("submit", async function(event){
             const resultado = await respuesta.json();
     
             if (respuesta.ok) {
-                window.location.href = '../busqueda.html';  // Redirige a la página de búsqueda si la fiesta se crea correctamente
+                window.location.href = '/frontend/views/index/busqueda.html';  // Redirige a la página de búsqueda si la fiesta se crea correctamente
             } else {
                 alert("Error:" + resultado.mensaje);
             }
@@ -340,3 +324,8 @@ formFiesta.addEventListener("submit", async function(event){
             console.error("Error de conexión:", error);
         }
     });
+    
+    
+} else{
+    window.location.href = "/frontend/views/usuarios/CrearUsuario.html"; 
+}
