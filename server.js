@@ -3,6 +3,7 @@ import cors from 'cors';
 import connectDB from './backend/database/db.js';
 import usuarioRoutes from './backend/routes/usuarioRoutes.js';
 import fiestaRoutes from './backend/routes/fiestaRoutes.js';
+import passwordRoutes from './backend/routes/passwordRoutes.js';
 
 const app = express();
 const url = "mongodb://127.0.0.1/proyecto"; 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/usuario', usuarioRoutes);
 app.use('/fiesta', fiestaRoutes);
+app.use('/pass', passwordRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {

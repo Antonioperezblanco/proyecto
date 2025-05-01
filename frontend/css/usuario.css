@@ -37,3 +37,7 @@ form{
 .carousel-control-prev:hover, .carousel-control-next:hover {
     opacity: 1; /* Resaltar el botón cuando se pase el ratón */
 }
+
+.recuperar{
+    float: right ;
+}
