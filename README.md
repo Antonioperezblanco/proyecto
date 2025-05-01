@@ -1,6 +1,6 @@
 # Proyecto
 
-Install mongodb + npm modules
+Install mongodb + npm install
 
 ## To-Do
 - Pagina final
@@ -8,3 +8,10 @@ Install mongodb + npm modules
 - Añadir amigos
 - Notificaciones
 - Recordar contraseña
+- Verificar correo
+- Buscar fiestas
+
+## Último commit
+- Encapsulamiento de la db
+- Solución error al crear fiestas
+- Mejora en las carpetas
