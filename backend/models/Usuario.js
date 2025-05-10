@@ -10,7 +10,7 @@ const usuarioSchema = new mongoose.Schema({
     edad: { type: Number, required: true },
     ciudad: { type: String, required: true },
     idFiestas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Fiesta', default: null }],
-    amigos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', default: null }], 
+    amigos: [{ type: Number, ref: 'Usuario' }]
 });
 
 usuarioSchema.plugin(mongooseSequence(mongoose), { inc_field: 'id' });

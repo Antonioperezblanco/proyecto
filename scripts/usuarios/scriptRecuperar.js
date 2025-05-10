@@ -29,9 +29,9 @@ email.addEventListener("input", () => {
 formInicio.addEventListener("submit", async function(event) {
     event.preventDefault(); 
 
-    const datos = {
-        correo: email.value
-    };
+        const datos = {
+            correo: email.value
+        };
 
     try {
         const respuesta = await fetch('http://127.0.0.1:3000/pass/solicitar', {

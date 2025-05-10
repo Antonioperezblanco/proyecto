@@ -4,14 +4,30 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             document.getElementById('header-container').innerHTML = data;
             iniciarEdicionUsuario(); // Llamamos a la función que maneja la edición
+            configurarFormularioAmigo();
+            contarSolicitudes();
+            mostrarSolicitudes();
         })
         .catch(error => console.error('Error cargando el header:', error));
 });
 
+//Función para que salga el numero de solicitudes que tienes
+function contarSolicitudes(){
+    const numeroNotificaciones = document.getElementById("nNotificacion")
+    const solicitudesJSON = sessionStorage.getItem('solicitudes');
+    if (JSON.parse(solicitudesJSON).length <9){
+         numeroNotificaciones.textContent = JSON.parse(solicitudesJSON).length
+    }else{
+        numeroNotificaciones.textContent = "9+"
+    }
+}
+
+//Función para al dar click al nombre de usuario te salga un formulario para poder editarlo
 function iniciarEdicionUsuario() {
     const info = document.getElementById('info');
     const overlay = document.getElementById('overlay');
     const formularioEdicion = document.getElementById('formularioEdicion');
+    const botonCancelar = document.getElementById("botonCancelar");
 
     if (!info) return console.error("Elemento con id 'info' no encontrado.");
 
@@ -63,8 +79,14 @@ function iniciarEdicionUsuario() {
             alert("Problema con la conexión");
         }
     });
+
+    botonCancelar.addEventListener("click", (event) => {
+        event.preventDefault();
+        overlay.style.display = 'none';
+    })
 }
 
+//Funcion para validar el formulario de arriba
 function agregarValidaciones() {
     const nombreUsuarioForm = document.getElementById("nombreUsuario");
     const correo = document.getElementById("correo");
@@ -110,4 +132,142 @@ function agregarValidaciones() {
             edad.style.outline = 'none';
         }
     });
+}
+
+//Funcion para enviar solicitudes de amistad
+function configurarFormularioAmigo() {
+    const formularioHeader = document.getElementById("formHeader");
+
+    formularioHeader.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+        const nombreAmigo = document.getElementById("anadir")?.value.trim();
+
+        if (!nombreAmigo) {
+            alert("Por favor, introduce el nombre de usuario del amigo");
+            return;
+        }
+
+        const datos = {
+            usuario: usuario.nombreUsuario,
+            amigo: nombreAmigo
+        };
+
+        try {
+            const respuesta = await fetch('http://127.0.0.1:3000/usuario/anadir', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+
+            const resultado = await respuesta.json();
+
+            if (respuesta.ok) {
+                alert("Solicitud de amistad enviada");
+                document.getElementById("anadir").value = ""; 
+            } else {
+                alert("Error: " + resultado.mensaje);
+            }
+        } catch (error) {
+            console.error("Error de conexión:", error);
+            alert("Hubo un error al intentar enviar la solicitud");
+        }
+    });
+}
+async function mostrarSolicitudes() {
+    const icono = document.getElementById("icono");
+    const lista = document.getElementById('listaSolicitudes');
+
+    icono.addEventListener("click", () => {
+        lista.classList.toggle('oculto');
+
+        if (!lista.classList.contains('oculto')) {
+            const solicitudesJSON = sessionStorage.getItem('solicitudes');
+            const solicitudes = solicitudesJSON ? JSON.parse(solicitudesJSON) : [];
+
+            lista.innerHTML = '';
+
+            if (solicitudes.length === 0) {
+                lista.innerHTML = "<p style='color:black; text-align:center'>No tienes solicitudes</p>";
+            } else {
+                solicitudes.forEach((sol, i) => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <span style='color:black'><strong style='text-decoration: underline'>${sol.usuario}</strong> te ha enviado una solicitud</span><br>
+                        <button class='btn btn-primary' onclick="aceptar(${i})">Aceptar</button>
+                        <button class='btn btn-danger' onclick="rechazar(${i})">Rechazar</button>
+                        <hr>
+                    `;
+                    lista.appendChild(div);
+                });
+            }
+        }
+    });
+}
+
+async function aceptar(i) {
+    const solicitudes = JSON.parse(sessionStorage.getItem('solicitudes'));
+    const solicitud = solicitudes[i];
+    const receptor = JSON.parse(sessionStorage.getItem('usuario'));
+
+    try {
+        const respuesta = await fetch('http://127.0.0.1:3000/usuario/aceptar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario: solicitud.usuario,
+                receptor: receptor.nombreUsuario
+            })
+        });
+
+        const resultado = await respuesta.json(); 
+
+        if (respuesta.ok) {
+            solicitudes.splice(i, 1);
+            sessionStorage.setItem('solicitudes', JSON.stringify(solicitudes));
+            mostrarSolicitudes();
+            alert("Solicitud aceptada")
+            location.reload();
+
+            
+        } else {
+            alert(resultado.mensaje || 'Error al aceptar solicitud');
+        }
+    } catch (error) {
+        console.error('Error aceptando solicitud: ', error);
+    }
+}
+
+async function rechazar(i) {
+    const solicitudes = JSON.parse(sessionStorage.getItem('solicitudes'));
+    const solicitud = solicitudes[i];
+    const receptor = JSON.parse(sessionStorage.getItem('usuario'));
+
+    try {
+        const respuesta = await fetch('http://127.0.0.1:3000/usuario/rechazar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario: solicitud.usuario,
+                receptor: receptor.nombreUsuario
+            })
+        });
+
+        const resultado = await respuesta.json(); 
+
+        if (respuesta.ok) {
+            solicitudes.splice(i, 1);
+            sessionStorage.setItem('solicitudes', JSON.stringify(solicitudes));
+            mostrarSolicitudes();
+            alert("Solicitud rechazada")
+            location.reload();
+
+            
+        } else {
+            alert(resultado.mensaje || 'Error al rechazar solicitud');
+        }
+    } catch (error) {
+        console.error('Error rechazando solicitud: ', error);
+    }
 }

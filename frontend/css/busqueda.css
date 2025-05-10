@@ -73,3 +73,23 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
+
+.dropdown-solicitudes {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    width: 250px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    padding: 10px;
+    height: 250px;
+    overflow-y: auto;
+    margin:0 30px;
+    border: 2px solid black;
+}
+
+.oculto {
+    display: none;
+}

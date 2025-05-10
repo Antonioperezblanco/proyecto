@@ -5,13 +5,13 @@ Install mongodb + npm install
 ## To-Do
 - Pagina final
 - Mejorar frontend
-- Añadir amigos
-- Notificaciones
-- Recordar contraseña
+- Mostrar amigos y borrarlos
 - Verificar correo
 - Buscar fiestas
+- Poner las imagenes
+- Log out
+- Reportes fiestas
 
 ## Último commit
-- Encapsulamiento de la db
-- Solución error al crear fiestas
-- Mejora en las carpetas
+- Recordar contraseña
+- Añadir amigos

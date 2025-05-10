@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import Usuario from '../models/Usuario.js';
-import { findByUsername, findByMail, findByUsernameOrMail, findById, saveUser } from '../database/usuariosDB.js';
+import { findByUsername, findByMail, findByUsernameOrMail, findById, saveUser, existeAmigo, deleteSolicitud, addAmigo } from '../database/usuariosDB.js';
+import { createSolicitud, existeSolicitud, obtenerSolicitudesRecibidas } from '../database/solicitudDB.js';
 
 export const crearUsuario = async (req, res) => {
     try {
@@ -30,7 +31,7 @@ export const crearUsuario = async (req, res) => {
         });
 
         await saveUser(nuevoUsuario);
-        res.status(201).json({ mensaje: 'Usuario creado exitosamente' });
+        res.status(201).json(nuevoUsuario);
     } catch (error) {
         console.error('Error al crear el usuario:', error);
         res.status(500).json({ mensaje: 'Error creando usuario', error: error.message });
@@ -67,10 +68,11 @@ export const inicioSesion = async (req, res) => {
             ciudad: usuario.ciudad,
             pass: usuario.pass
         };
-
+        const solicitudes = await obtenerSolicitudesRecibidas(usuario.nombreUsuario);
         res.status(200).json({ 
             mensaje: 'Inicio de sesión exitoso',
-            usuario: usuarioData
+            usuario: usuarioData,
+            solicitudesRecibidas: solicitudes
         });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -84,7 +86,7 @@ export const editarUsuario = async (req, res) => {
         const { id, nombreUsuario, correo, edad, ciudad } = req.body;
         const usuario = await findById(id);
         if (!usuario) {
-            return res.status(404).json({ mensaje: 'Hola usuario' });
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
         }
 
         // Verificar si el nombre de usuario ya está en uso por otro usuario
@@ -115,5 +117,79 @@ export const editarUsuario = async (req, res) => {
     } catch (error) {
         console.error('Error al actualizar el usuario:', error);
         res.status(500).json({ mensaje: 'Error actualizando usuario', error: error.message });
+    }
+};
+
+export const anadirAmigo = async (req, res) => {
+    try {
+        const { usuario, amigo } = req.body;
+
+        if (usuario == amigo){
+            return res.status(404).json({ mensaje: 'No puedes enviar una solicitud a ti mismo' });
+        }
+
+        const solicitud = await findByUsername(amigo);
+        if (!solicitud) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+        }
+        
+        if (await existeSolicitud(usuario, amigo)) {
+            return res.status(404).json({ mensaje: 'Ya tiene una solicitud pendiente' });
+        }
+        const datosUsuario = await findByUsername(usuario);
+        const datosAmigo = findByUsername(amigo);
+
+        if (await existeAmigo(datosUsuario, datosAmigo.id)){
+            return res.status(404).json({ mensaje: 'Ya sois amigos' });
+        }
+        await createSolicitud(usuario, amigo);
+
+        res.status(200).json({ mensaje: 'Solicitud enviada correctamente' });
+    } catch (error) {
+        console.error('Error al enviar la solicituud:', error);
+        res.status(500).json({ mensaje: 'Error enviando la solicitud', error: error.message });
+    }
+};
+
+export const aceptarSolicitud = async (req, res) => {
+    try {
+        const { usuario, receptor } = req.body;
+
+        const emisor = await findByUsername(usuario);
+        const destinatario = await findByUsername(receptor);
+
+         if (!emisor || !destinatario) {
+            return res.status(404).json({ mensaje: 'Usuarios no encontrados' });
+        }
+
+        await addAmigo(destinatario.id, emisor.id);
+        await addAmigo(emisor.id, destinatario.id);
+
+        await deleteSolicitud(usuario, receptor);
+
+        res.status(200).json({ ok: true, mensaje: 'Solicitud aceptada' });
+    } catch (error) {
+        console.error('Error al aceptar solicitud:', error);
+        res.status(500).json({ mensaje: 'Error interno', error: error.message });
+    }
+};
+
+export const rechazarSolicitud = async (req, res) => {
+    try {
+        const { usuario, receptor } = req.body;
+
+        const emisor = await findByUsername(usuario);
+        const destinatario = await findByUsername(receptor);
+
+         if (!emisor || !destinatario) {
+            return res.status(404).json({ mensaje: 'Usuarios no encontrados' });
+        }
+
+        await deleteSolicitud(usuario, receptor);
+
+        res.status(200).json({ ok: true, mensaje: 'Solicitud rechazada' });
+    } catch (error) {
+        console.error('Error al rechazar solicitud:', error);
+        res.status(500).json({ mensaje: 'Error interno', error: error.message });
     }
 };

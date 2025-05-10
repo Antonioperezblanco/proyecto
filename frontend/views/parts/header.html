@@ -1,52 +1,59 @@
-<div class="contenedorIzq d-flex align-items-center">
-    <p id="info" class="info"></p>
-    <a href="/frontend/views/index/busqueda.html">
-        <button class="inicio btn m-4"> INICIO </button>
-    </a>
-</div>
-
-<div id="overlay" class="overlay">
-    <div id="formularioEdicion" class="formularioEdicion">
-        <h3 class="h3 text-dark">Editar Datos de Usuario</h3>
-        <form id="form-editar-usuario" method="post"  action="http://127.0.0.1:3000/usuario/editarUsuario">
-            <label for="nombreUsuario" class="form-label text-dark">Nombre de Usuario:</label>
-            <input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control form-control-sm">
-            <span id="nombreError" class="text-danger"></span>
-            <br>
-
-            <label for="correo" class="form-label text-dark">Correo:</label>
-            <input type="email" id="correo" name="correo" class="form-control form-control-sm">
-            <span id="correoError" class="text-danger fs-1"></span>
-            <br>
-
-            <label for="edad" class="form-label text-dark">Edad:</label>
-            <input type="number" id="edad" name="edad" class="form-control form-control-sm">
-            <span id="edadError" class="text-danger fs-1"></span>
-            <br>
-
-            <label for="ciudad" class="form-label text-dark">Ciudad:</label>
-            <select name="ciudad" id="ciudad" class="form-control form-control-sm">
-                <option value="madrid"> Madrid</option>
-                <option value="barcelona"> Barcelona</option>
-            </select>
-            <span id="ciudadError" class="text-danger fs-1"></span>
-            <br> 
-
-            <button type="submit" class="btn btn-sm-primary" id="boton">Guardar Cambios</button>
-      
-        </form>
+    <div class="contenedorIzq d-flex align-items-center">
+        <p id="info" class="info"></p>
+        <a href="/frontend/views/index/busqueda.html">
+            <button class="inicio btn m-4"> INICIO </button>
+        </a>
     </div>
-</div>
 
-<div class="contenedorCentro d-flex align-items-center justify-content-center">
-    <a href="/frontend/views/fiestas/subirFiesta.html">
-        <button class="btn btn-success">Subir una fiesta</button>
-    </a>
-</div>
-<div class="contenedorDer d-flex flex-row align-items-center">
-    <form class="formHeader d-flex flex-row ">
-        <input type="text" id="anadir" class="form-control form-control-sm w-50" placeholder="Añadir amigo...">
-        <input type="submit" value="Buscar Amigo..." class="btn btn-secondary btn-sm" id="buscarAmigo">
-    </form>
-    <i class="iconoNotificacion fa-regular fa-bell fs-4"></i>
-</div>
+    <div id="overlay" class="overlay">
+        <div id="formularioEdicion" class="formularioEdicion">
+            <h3 class="h3 text-dark">Editar Datos de Usuario</h3>
+            <form id="form-editar-usuario" method="post"  action="http://127.0.0.1:3000/usuario/editarUsuario">
+                <label for="nombreUsuario" class="form-label text-dark">Nombre de Usuario:</label>
+                <input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control form-control-sm">
+                <span id="nombreError" class="text-danger"></span>
+                <br>
+
+                <label for="correo" class="form-label text-dark">Correo:</label>
+                <input type="email" id="correo" name="correo" class="form-control form-control-sm">
+                <span id="correoError" class="text-danger fs-1"></span>
+                <br>
+
+                <label for="edad" class="form-label text-dark">Edad:</label>
+                <input type="number" id="edad" name="edad" class="form-control form-control-sm">
+                <span id="edadError" class="text-danger fs-1"></span>
+                <br>
+
+                <label for="ciudad" class="form-label text-dark">Ciudad:</label>
+                <select name="ciudad" id="ciudad" class="form-control form-control-sm">
+                    <option value="madrid"> Madrid</option>
+                    <option value="barcelona"> Barcelona</option>
+                </select>
+                <span id="ciudadError" class="text-danger fs-1"></span>
+                <br> 
+
+                <button type="submit" class="btn btn-sm-primary" id="boton">Guardar Cambios</button>
+                <button type="reset" id="botonCancelar" class="btn btn-danger">Cancelar</button>
+                
+        
+            </form>
+        </div>
+    </div>
+
+    <div class="contenedorCentro d-flex align-items-center justify-content-center">
+        <a href="/frontend/views/fiestas/subirFiesta.html">
+            <button class="btn btn-success">Subir una fiesta</button>
+        </a>
+    </div>
+    <div class="contenedorDer d-flex flex-row align-items-center">
+        <form class="formHeader d-flex flex-row" id="formHeader">
+            <input type="text" id="anadir" class="form-control form-control-sm w-50" placeholder="Añadir amigo...">
+            <input type="submit" value="Buscar Amigo..." class="btn btn-secondary btn-sm" id="buscarAmigo">
+        </form>
+        <div class="notificacion" id="notificacion">
+            <i class="iconoNotificacion fa-regular fa-bell fs-4" id="icono"></i>
+            <span id="nNotificacion"></span>
+            <div id="listaSolicitudes" class="dropdown-solicitudes oculto"></div>
+        </div>
+        
+    </div>

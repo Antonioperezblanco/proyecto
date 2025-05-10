@@ -70,24 +70,26 @@ formInicio.addEventListener("submit", async function(event) {
     event.preventDefault(); 
 
     const nuevaPass = pass.value;
+    const token = window.location.pathname.split('/').pop();
 
     try {
         const respuesta = await fetch(`http://127.0.0.1:3000/pass/restablecer/${token}`, {
             method: 'POST',  
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pass: nuevaPass })  
+            body: JSON.stringify({ nuevaPass: nuevaPass })  
         });
+
+        if (!respuesta.ok) {
+            const errorData = await respuesta.json();
+            throw new Error(errorData.error || 'Error al actualizar contraseña');
+        }
 
         const resultado = await respuesta.json(); 
 
-        if (respuesta.ok) {
+        
             alert("Contraseña actualizada")
-            window.location.href = "/frontend/views/usuarios/InicioSesion.html";  
-        } else {
-            alert("Error: " + resultado.mensaje);  
-        }
     } catch (error) {
         console.error("Error de conexión:", error);
-        alert("Hubo un error al intentar iniciar sesión");
+        alert(`Error: ${error.message}`);
     }
 });

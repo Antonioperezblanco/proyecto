@@ -168,7 +168,7 @@ formulario.addEventListener("submit", async function(event) {
         const resultado = await respuesta.json();
 
         if (respuesta.ok) {
-            sessionStorage.setItem('usuario', JSON.stringify(datos));
+            sessionStorage.setItem('usuario', JSON.stringify(resultado));
             sessionStorage.setItem('origen', 'crear');
             const usuarioGuardado = sessionStorage.getItem("usuario");
 

@@ -115,6 +115,7 @@ formInicio.addEventListener("submit", async function(event) {
         if (respuesta.ok) {
             const usuario =  resultado.usuario;
             sessionStorage.setItem("usuario", JSON.stringify(usuario));
+            sessionStorage.setItem('solicitudes', JSON.stringify(resultado.solicitudesRecibidas));
             sessionStorage.setItem('origen', 'inicio');
 
             if (sessionStorage.getItem("usuario")){
