@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
             configurarFormularioAmigo();
             contarSolicitudes();
             mostrarSolicitudes();
+            mostrarAmigos();
         })
         .catch(error => console.error('Error cargando el header:', error));
 });
@@ -269,5 +270,81 @@ async function rechazar(i) {
         }
     } catch (error) {
         console.error('Error rechazando solicitud: ', error);
+    }
+}
+
+async function mostrarAmigos() {
+    const icono = document.getElementById("amigo");
+    const lista = document.getElementById('listaAmigos');
+
+    icono.addEventListener("click", () => {
+        lista.classList.toggle('oculto');
+
+        if (!lista.classList.contains('oculto')) {
+            const amigosJSON = sessionStorage.getItem('amigos');
+            const amigos = amigosJSON ? JSON.parse(amigosJSON) : [];
+
+            lista.innerHTML = '';
+
+            if (amigos.length === 0) {
+                lista.innerHTML = "<p style='color:black; text-align:center'>No tienes amigos</p>";
+            } else {
+                amigos.forEach((ami, i) => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <strong style='text-decoration: underline; color:black'>${ami}</strong>
+                        <button class='btn btn-danger' style='position:relative; float: right' onclick="eliminar(${i})">Eliminar</button>
+                        <hr>
+                    `;
+                    lista.appendChild(div);
+                });
+            }
+        }
+    });
+}
+async function eliminar(i) {
+    // Obtener datos del almacenamiento de sesión
+    const amigos = JSON.parse(sessionStorage.getItem('amigos'));
+    const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+
+    // Verificar que el índice y los datos existan
+    if (!amigos[i] || !usuario) {
+        alert('Datos no encontrados');
+        return;
+    }
+
+    const amigo = amigos[i];
+
+    try {
+        // Enviar solicitud al servidor
+        const respuesta = await fetch('http://127.0.0.1:3000/usuario/eliminar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario: usuario,
+                amigo: amigo
+            })
+        });
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.mensaje || 'Error al eliminar amigo');
+        }
+
+        // Actualizar datos locales
+        amigos.splice(i, 1);
+        sessionStorage.setItem('amigos', JSON.stringify(amigos)); // Corregido: debe ser 'amigos' no 'solicitudes'
+        
+        // Actualizar UI
+        mostrarAmigos();
+        alert("Amigo eliminado correctamente");
+        
+        // Recargar la página
+        location.reload();
+
+    } catch (error) {
+        console.error('Error eliminando amigo: ', error);
+        alert(error.message);
     }
 }

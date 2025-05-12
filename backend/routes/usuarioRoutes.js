@@ -1,5 +1,5 @@
 import express from 'express';
-import { crearUsuario, inicioSesion, editarUsuario, anadirAmigo, aceptarSolicitud, rechazarSolicitud } from '../Controllers/usuarioController.js';
+import { crearUsuario, inicioSesion, editarUsuario, anadirAmigo, aceptarSolicitud, rechazarSolicitud, eliminarAmigo } from '../Controllers/usuarioController.js';
 const router = express.Router();
 
 router.post('/crear', crearUsuario);
@@ -13,5 +13,7 @@ router.post ('/anadir', anadirAmigo)
 router.post ('/aceptar', aceptarSolicitud);
 
 router.post ('/rechazar', rechazarSolicitud);
+
+router.post('/eliminar', eliminarAmigo);
+
 export default router;
- 

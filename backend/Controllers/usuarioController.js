@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import Usuario from '../models/Usuario.js';
-import { findByUsername, findByMail, findByUsernameOrMail, findById, saveUser, existeAmigo, deleteSolicitud, addAmigo } from '../database/usuariosDB.js';
+import { findByUsername, findByMail, findByUsernameOrMail, findById, saveUser, existeAmigo, deleteSolicitud, addAmigo, amigos } from '../database/usuariosDB.js';
 import { createSolicitud, existeSolicitud, obtenerSolicitudesRecibidas } from '../database/solicitudDB.js';
 
 export const crearUsuario = async (req, res) => {
@@ -69,10 +69,12 @@ export const inicioSesion = async (req, res) => {
             pass: usuario.pass
         };
         const solicitudes = await obtenerSolicitudesRecibidas(usuario.nombreUsuario);
+        const listaAmigos = await amigos(usuario.nombreUsuario)
         res.status(200).json({ 
             mensaje: 'Inicio de sesión exitoso',
             usuario: usuarioData,
-            solicitudesRecibidas: solicitudes
+            solicitudesRecibidas: solicitudes,
+            amigos: listaAmigos
         });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -138,8 +140,8 @@ export const anadirAmigo = async (req, res) => {
         }
         const datosUsuario = await findByUsername(usuario);
         const datosAmigo = findByUsername(amigo);
-
-        if (await existeAmigo(datosUsuario, datosAmigo.id)){
+        const amistad = await existeAmigo(datosUsuario, datosAmigo.id)
+        if (amistad){
             return res.status(404).json({ mensaje: 'Ya sois amigos' });
         }
         await createSolicitud(usuario, amigo);
@@ -190,6 +192,32 @@ export const rechazarSolicitud = async (req, res) => {
         res.status(200).json({ ok: true, mensaje: 'Solicitud rechazada' });
     } catch (error) {
         console.error('Error al rechazar solicitud:', error);
+        res.status(500).json({ mensaje: 'Error interno', error: error.message });
+    }
+};
+export const eliminarAmigo = async (req, res) => {
+    try {
+        const { usuario, amigo } = req.body;
+
+        const usuarioDB = await findByUsername(usuario.nombreUsuario);
+        const amigoDB = await findByUsername(amigo); 
+
+        if (!usuarioDB || !amigoDB) {
+            return res.status(404).json({ mensaje: 'Usuario o amigo no encontrado' });
+        }
+
+        usuarioDB.amigos = usuarioDB.amigos || [];
+        amigoDB.amigos = amigoDB.amigos || [];
+
+        usuarioDB.amigos = usuarioDB.amigos.filter(id => id !== amigoDB.id);
+        amigoDB.amigos = amigoDB.amigos.filter(id => id !== usuarioDB.id);
+
+        await usuarioDB.save();
+        await amigoDB.save();
+
+        res.status(200).json({ mensaje: 'Amigo eliminado con éxito' });
+    } catch (error) {
+        console.error('Error al eliminar amigo:', error);
         res.status(500).json({ mensaje: 'Error interno', error: error.message });
     }
 };

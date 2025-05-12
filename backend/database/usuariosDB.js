@@ -22,3 +22,21 @@ export const addAmigo = async (usuarioId, amigoId) => {
 }
 
 export const deleteSolicitud = (usuario, receptor) => Solicitud.deleteOne({ usuario, amigo: receptor});
+
+export const amigos = async (nombreUsuario) => {
+    const usuario = await findByUsername(nombreUsuario);
+    if (!usuario) {
+        return { mensaje: 'Usuario no encontrado' };
+    }
+    const amigosId = usuario.amigos; 
+
+    if (amigosId.length === 0) {
+        return []; 
+    }
+
+    const amigos = await Usuario.find({ id: { $in: amigosId } });
+
+    const nombreAmigos = amigos.map(amigo => amigo.nombreUsuario);
+
+    return nombreAmigos;
+}

@@ -3,8 +3,11 @@ import { solicitarRecuperacion, restablecerPass, mostrarFormulario  } from '../C
 const router = express.Router();
 
 router.get('/restablecer/:token', mostrarFormulario);
+
 router.get('/mostrarFormulario', mostrarFormulario)
+
 router.post('/solicitar', solicitarRecuperacion);
+
 router.post('/restablecer/:token', restablecerPass);
 
 export default router;

@@ -116,6 +116,7 @@ formInicio.addEventListener("submit", async function(event) {
             const usuario =  resultado.usuario;
             sessionStorage.setItem("usuario", JSON.stringify(usuario));
             sessionStorage.setItem('solicitudes', JSON.stringify(resultado.solicitudesRecibidas));
+            sessionStorage.setItem('amigos', JSON.stringify(resultado.amigos));
             sessionStorage.setItem('origen', 'inicio');
 
             if (sessionStorage.getItem("usuario")){
