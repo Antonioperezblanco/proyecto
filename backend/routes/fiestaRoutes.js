@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post('/crear', crearFiesta);
 
-router.get('/buscar', buscarFiesta);
+router.post('/buscar', buscarFiesta);
 
 export default router; 

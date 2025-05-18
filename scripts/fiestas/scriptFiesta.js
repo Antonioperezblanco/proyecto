@@ -20,19 +20,27 @@ if (sessionStorage.getItem('origen') == 'crear' || sessionStorage.getItem('orige
     fecha.textContent = `${dia}/${mes}/${anio}`;
 
      // Enviar al backend
-     fetch('http://localhost:3000/fiesta/buscar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            fecha: fechaString,  // Se manda en formato YYYY-MM-DD
-            tipo: sessionStorage.getItem("tipo")
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        mostrarFiestas(data);
-    })
-    .catch(error => console.error('Error al obtener fiestas:', error));
+    const datos = {
+        fecha: fechaString,
+        tipo: sessionStorage.getItem('tipo')
+    };
+
+    try{
+        const respuesta = await fetch('http://127.0.0.1:3000/fiesta/buscar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await respuesta.json();
+
+        if(respuesta.ok){
+            mostrarFiestas(resultado.fiestas);
+        }
+    } catch (error){
+        console.error("Error de conexión:", error);
+    }
+
 } else{
     window.location.href = "/frontend/views/usuarios/CrearUsuario.html"; 
 }
@@ -40,7 +48,7 @@ function mostrarFiestas(fiestas) {
     const contenedor = document.getElementById("contenedorFiestas");
     contenedor.innerHTML = ""; // Limpiar el contenedor antes de añadir nuevas fiestas
 
-    if (fiestas.length === 0) {
+    if (!Array.isArray(fiestas) || fiestas.length === 0) {
         contenedor.innerHTML = "<p class='text-center text-danger'>No hay fiestas disponibles para esta fecha y tipo.</p>";
         return;
     }

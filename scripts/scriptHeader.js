@@ -3,11 +3,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.text())
         .then(data => {
             document.getElementById('header-container').innerHTML = data;
-            iniciarEdicionUsuario(); // Llamamos a la función que maneja la edición
+            
+            iniciarEdicionUsuario(); 
             configurarFormularioAmigo();
             contarSolicitudes();
             mostrarSolicitudes();
             mostrarAmigos();
+            mostrarConfig();
         })
         .catch(error => console.error('Error cargando el header:', error));
 });
@@ -85,7 +87,29 @@ function iniciarEdicionUsuario() {
         event.preventDefault();
         overlay.style.display = 'none';
     })
+}function mostrarConfig() {
+    const config = document.getElementById("config");
+    const sidebar = document.getElementById("sidebar");
+
+    config.addEventListener("click", () => {
+        sidebar.classList.toggle('mostrar');
+
+        // Establecer los valores de inicio y final para la animación
+        if (sidebar.classList.contains('mostrar')) {
+            config.style.setProperty('--inicio', '0px');
+            config.style.setProperty('--final', '400px');
+        } else {
+            config.style.setProperty('--inicio', '400px');
+            config.style.setProperty('--final', '0px');
+        }
+
+        // Resetear la animación (clave para que se vuelva a aplicar)
+        config.classList.remove('rebote');
+        void config.offsetWidth; // Forzar reflow
+        config.classList.add('rebote');
+    });
 }
+
 
 //Funcion para validar el formulario de arriba
 function agregarValidaciones() {
@@ -292,8 +316,9 @@ async function mostrarAmigos() {
                 amigos.forEach((ami, i) => {
                     const div = document.createElement('div');
                     div.innerHTML = `
-                        <strong style='text-decoration: underline; color:black'>${ami}</strong>
+                        <strong style='text-decoration: underline; color:black'>${ami}</strong> <br>
                         <button class='btn btn-danger' style='position:relative; float: right' onclick="eliminar(${i})">Eliminar</button>
+                        <br>
                         <hr>
                     `;
                     lista.appendChild(div);

@@ -1,4 +1,3 @@
-import Fiesta from '../models/Fiesta.js'
 import Discoteca from '../models/Discoteca.js'
 import FiestaPrivada from '../models/FiestaPrivada.js'
 
@@ -60,20 +59,49 @@ export const buscarFiesta = async (req, res) => {
         console.log(req.body)
         const {fecha, tipo} = req.body;
 
-        const fechaInicio = new Date(fecha);
-        fechaInicio.setUTCHours(0,0,0,0);
+       const fechaInicio = new Date(fecha);
+
+        fechaInicio.setUTCHours(0, 0, 0, 0);  // Asegura que sea solo la fecha, sin hora
 
         const fechaFin = new Date(fecha);
-        fechaFin.setUTCHours(0,0,0,0);
+        fechaFin.setUTCHours(23, 59, 59, 999);  // Hasta el último milisegundo del día
 
-        let filtro = { fecha: { $gte: fechaInicio, $lt: fechaFin  } };
+        console.log("Fecha de inicio:", fechaInicio);
+        console.log("Fecha de fin:", fechaFin);
 
-        if (tipo !== "ambas"){
-            filtro.__t === "FiestaPrivada" ? "FiestaPrivada" : "Discoteca";
+        // Aquí haces la consulta sin las horas
+        let fiestas = [];
+
+        let query = {
+            fecha: {
+                $gte: fechaInicio,
+                $lte: fechaFin
+            }
+        };
+
+        if (tipo === "discoteca") {
+            fiestas = await Discoteca.find(query);
+        } else if (tipo === "fiesta") {
+            fiestas = await FiestaPrivada.find(query);
+        } else if (tipo === "ambas") {
+            const [discotecas, privadas] = await Promise.all([
+                Discoteca.find({
+                    fecha: {
+                        $gte: fechaInicio,
+                        $lt: fechaFin
+                    }
+                }),
+                FiestaPrivada.find({
+                    fecha: {
+                        $gte: fechaInicio,
+                        $lt: fechaFin
+                    }
+                })
+            ]);
+            fiestas = [...discotecas, ...privadas];
         }
-        const fiestas = await Fiesta.find(filtro);
 
-        console.log("Fiestas: ", fiestas);
+        console.log("Fiestas encontradas:", fiestas);
 
         res.status(200).json({
             mensaje: "Fiestas encontradas",
