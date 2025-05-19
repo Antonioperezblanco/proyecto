@@ -59,12 +59,11 @@ export const buscarFiesta = async (req, res) => {
         console.log(req.body)
         const {fecha, tipo} = req.body;
 
-       const fechaInicio = new Date(fecha);
+        const fechaISO = `${fecha}T00:00:00.000Z`;
+        const fechaInicio = new Date(fechaISO);
+        const fechaFin = new Date(fechaISO);
+        fechaFin.setUTCHours(23, 59, 59, 999);
 
-        fechaInicio.setUTCHours(0, 0, 0, 0);  // Asegura que sea solo la fecha, sin hora
-
-        const fechaFin = new Date(fecha);
-        fechaFin.setUTCHours(23, 59, 59, 999);  // Hasta el último milisegundo del día
 
         console.log("Fecha de inicio:", fechaInicio);
         console.log("Fecha de fin:", fechaFin);

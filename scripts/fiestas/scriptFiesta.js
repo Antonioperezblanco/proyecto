@@ -54,17 +54,36 @@ function mostrarFiestas(fiestas) {
     }
 
     fiestas.forEach(fiesta => {
-        const div = document.createElement("div");
-        div.classList.add("card", "m-2", "p-3");
-
-        div.innerHTML = `
-            <h4>${fiesta.nombre}</h4>
-            <p><strong>Ubicación:</strong> ${fiesta.ubicacion}</p>
+       
+        if (sessionStorage.getItem("tipo") == "discoteca"){
+            const div = document.createElement("div");
+            div.classList.add("card", "m-2", "p-3", "tarjeta");
+            div.innerHTML = `
+            <h3>${fiesta.nombre}</h3>
+            <p><strong>Ubicación:</strong> ${fiesta.localizacion}</p>
             <p><strong>Hora:</strong> ${fiesta.hora}</p>
-            <p><strong>Descripción:</strong> ${fiesta.descripcion}</p>
+            <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
         `;
 
         contenedor.appendChild(div);
+        } else{
+            const div = document.createElement("div");
+            if (fiesta.tuAlcohol){
+                fiesta.tuAlcohol = "Si"
+            }else{
+                fiesta.tuAlcohol = "No"
+            }
+            div.classList.add("card", "m-2", "p-3", "tarjeta");
+            div.innerHTML = `
+            <h3>${fiesta.localizacion}</h3>
+            <p><strong>Hora:</strong> ${fiesta.hora}</p>
+            <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
+            <p><strong>Tu alcohol:</strong> ${fiesta.tuAlcohol}</p>
+        `;
+
+        contenedor.appendChild(div);
+        }
+        
     });
 }
 

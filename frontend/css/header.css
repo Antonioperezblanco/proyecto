@@ -128,8 +128,8 @@
 
 @keyframes bounceX {
   0%   { transform: translateX(var(--inicio)); }
-  60%  { transform: translateX(calc(var(--final) + 25px)); }  /* rebote hacia adelante */
-  80%  { transform: translateX(calc(var(--final) - 10px)); }  /* rebote hacia atrás */
+  60%  { transform: translateX(calc(var(--final) + 25px)); } 
+  80%  { transform: translateX(calc(var(--final) - 10px)); }  
   100% { transform: translateX(var(--final)); }
 }
 
