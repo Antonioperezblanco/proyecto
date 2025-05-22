@@ -10,3 +10,64 @@ body {
     margin: 0 auto;
     margin-top: 10%;
 }
+
+.tarjeta{
+    color: darkblue;
+    height: auto;
+    height: 300px;
+    background-color: black;
+}
+
+.tarjeta h3 {
+    text-decoration: underline;
+}
+
+.fav {
+    font-size: 30px;
+    border-radius: 100%;
+    background-color: green;
+    padding: 10px;
+    color: white;
+    width: 50px;
+}
+.dislike {
+    font-size: 30px;
+    border-radius: 100%;
+    background-color: red;
+    padding: 10px;
+    color: white;
+    width: 50px;
+    text-align: center;
+}
+
+@keyframes swipeRight {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150%) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeLeft {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-150%) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+.swipe-right {
+  animation: swipeRight 0.5s forwards;
+  pointer-events: none;
+}
+
+.swipe-left {
+  animation: swipeLeft 0.5s forwards;
+  pointer-events: none;
+}

@@ -1,13 +1,14 @@
 if (sessionStorage.getItem('origen') == 'crear' || sessionStorage.getItem('origen') == 'inicio'){
     const tipo = document.getElementById("tipo")
-    if (sessionStorage.getItem("tipo") == "discoteca"){
+    const tipoValor = sessionStorage.getItem("tipo");
+    if (tipoValor === "discoteca") {
         tipo.textContent = "DISCOTECA";
-    }else if (sessionStorage.getItem("tipo") == "fiesta"){
+    } else if (tipoValor === "fiesta") {
         tipo.textContent = "FIESTA PRIVADA";
-    }
-    if (sessionStorage.getItem("tipo") == "ambas"){
+    } else if (tipoValor === "ambas") {
         tipo.textContent = "AMBAS";
     }
+
     const fecha = document.getElementById("fecha");
 
     const fechaString = sessionStorage.getItem("fecha");
@@ -46,44 +47,175 @@ if (sessionStorage.getItem('origen') == 'crear' || sessionStorage.getItem('orige
 }
 function mostrarFiestas(fiestas) {
     const contenedor = document.getElementById("contenedorFiestas");
-    contenedor.innerHTML = ""; // Limpiar el contenedor antes de añadir nuevas fiestas
+    const tipo = sessionStorage.getItem("tipo");
+    let indiceActual = 0;
 
     if (!Array.isArray(fiestas) || fiestas.length === 0) {
         contenedor.innerHTML = "<p class='text-center text-danger'>No hay fiestas disponibles para esta fecha y tipo.</p>";
         return;
     }
 
-    fiestas.forEach(fiesta => {
-       
-        if (sessionStorage.getItem("tipo") == "discoteca"){
-            const div = document.createElement("div");
-            div.classList.add("card", "m-2", "p-3", "tarjeta");
-            div.innerHTML = `
-            <h3>${fiesta.nombre}</h3>
-            <p><strong>Ubicación:</strong> ${fiesta.localizacion}</p>
-            <p><strong>Hora:</strong> ${fiesta.hora}</p>
-            <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
-        `;
+    function renderFiesta(indice) {
+    contenedor.innerHTML = "";
 
-        contenedor.appendChild(div);
-        } else{
-            const div = document.createElement("div");
-            if (fiesta.tuAlcohol){
-                fiesta.tuAlcohol = "Si"
-            }else{
-                fiesta.tuAlcohol = "No"
-            }
-            div.classList.add("card", "m-2", "p-3", "tarjeta");
-            div.innerHTML = `
-            <h3>${fiesta.localizacion}</h3>
-            <p><strong>Hora:</strong> ${fiesta.hora}</p>
-            <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
-            <p><strong>Tu alcohol:</strong> ${fiesta.tuAlcohol}</p>
+    if (indice >= fiestas.length) {
+        const rutaDestino = "/frontend/views/index/busqueda.html";
+        contenedor.innerHTML = `
+            <div class="text-center text-success p-3">
+                <p class="mb-4">¡Has revisado todas las fiestas!</p>
+                <button id="reiniciar" class="btn btn-primary m-2">Volver a ver las fiestas</button>
+                <button id="otraPagina" class="btn btn-secondary m-2">Página anterior</button>
+            </div>
         `;
+        document.getElementById("reiniciar").addEventListener("click", () => {
+            indiceActual = 0;
+            renderFiesta(indiceActual);
+        });
+        document.getElementById("otraPagina").addEventListener("click", () => {
+            window.location.href = rutaDestino;
+        });
+        return;
+    }
 
-        contenedor.appendChild(div);
+    const fiesta = fiestas[indice];
+    const div = document.createElement("div");
+    const div2 = document.createElement("div");
+    div.classList.add("card", "m-2", "p-4", "tarjeta", "w-75");
+    div2.classList.add("infor", "w-50");
+
+    if (tipo === "discoteca") {
+        mostrarDiscoteca(div, div2, fiesta);
+    } else if (tipo === "fiesta") {
+        mostrarFiestaPrivada(div, div2, fiesta);
+    } else {
+        if (fiesta.nombre) {
+            mostrarDiscoteca(div, div2, fiesta);
+        } else {
+            mostrarFiestaPrivada(div, div2, fiesta);
         }
-        
-    });
+    }
+
+    contenedor.appendChild(div);
+    contenedor.appendChild(div2);
+
+    // Ahora que el contenido está renderizado, puedes buscar los botones
+    const btnFavorito = div.querySelector(".fav");
+    const btnNo = div.querySelector(".dislike");
+
+    if (btnFavorito) {
+        btnFavorito.addEventListener("click", () => {
+            div.classList.add("swipe-left");
+            div2.classList.add("swipe-left");
+            setTimeout(() => {
+                indiceActual++;
+                renderFiesta(indiceActual);
+            }, 500);
+        });
+    }
+
+    if (btnNo) {
+        btnNo.addEventListener("click", () => {
+            div.classList.add("swipe-right");
+            div2.classList.add("swipe-right");
+            setTimeout(() => {
+                indiceActual++;
+                renderFiesta(indiceActual);
+            }, 500);
+        });
+    }
+
+    const icono = div.querySelector(".info-icon");
+    const infoDiv = div2.querySelector(".info-extra");
+    if (icono && infoDiv) {
+        let click = false;
+        icono.addEventListener("click", () => {
+            click = !click;
+            if (click) {
+                div2.style.border = "2px solid black";
+                div2.style.borderRadius = "10px";
+                div2.style.padding = "10px";
+                div2.style.backgroundColor = "#f8f9fa";
+                if (!fiesta.tuAlcohol) {
+                    infoDiv.innerHTML = `
+                        <div class='text-dark p-3'>
+                            <p class='mt-2'><strong>Precio:</strong> ${fiesta.precio} €</p>
+                            <p><strong>Localización:</strong> ${fiesta.localizacion}</p>
+                            <p><strong>Hora inicio:</strong> ${fiesta.hora}</p>
+                            <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
+                            <p><strong>Vestimenta:</strong> ${fiesta.vestimenta}</p>
+                            <p><strong>Precio combinado:</strong> ${fiesta.precioCombinado} €</p>
+                            <p><strong>Precio cerveza:</strong> ${fiesta.precioCerveza} €</p>
+                            <p><strong>Precio refresco:</strong> ${fiesta.precioRefresco} €</p>
+                        </div>
+                    `;
+                } else {
+                    infoDiv.innerHTML = `
+                        <div class='text-dark p-3'>
+                            <p><strong>Localización:</strong> ${fiesta.localizacion}</p>
+                            <p><strong>Hora inicio:</strong> ${fiesta.hora}</p>
+                            <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
+                            <p><strong>Vestimenta:</strong> ${fiesta.vestimenta}</p>
+                        </div>
+                    `;
+                }
+            } else {
+                infoDiv.innerHTML = "";
+                div2.style.border = "0";
+                div2.style.borderRadius = "10px";
+                div2.style.padding = "10px";
+                div2.style.backgroundColor = "transparent";
+            }
+        });
+    }
 }
 
+
+    renderFiesta(indiceActual); 
+}
+
+
+function mostrarDiscoteca(div, div2, fiesta) {
+    div2.innerHTML = `
+                <div class="info-extra"></div>
+            `
+            div.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <h3 class="mb-0">${fiesta.localizacion}</h3>
+                    <i class="fa-solid fa-bars info-icon" style="cursor:pointer;"></i>
+                </div>
+                <p class='mt-2'><strong>Ubicación:</strong> ${fiesta.localizacion}</p>
+                <p><strong>Hora inicio:</strong> ${fiesta.hora}</p>
+                <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <p><strong>Precio:</strong> ${fiesta.precio} €</p>
+                    <span><i class="fa-solid fa-user"></i> ${fiesta.contador}</span>
+                </div>   
+                <div class="d-flex justify-content-center align-items-center w-100">
+                    <i class="fav fa-solid fa-heart mr-2"></i>
+                    <i class="dislike fa-solid fa-x ml-2"></i>
+                </div>
+            `;
+}
+
+function mostrarFiestaPrivada(div, div2, fiesta){
+     const alcohol = fiesta.tuAlcohol ? "Sí" : "No";
+        div2.innerHTML = `
+            <div class="info-extra mt-2"></div>
+        `
+        div.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <h3 class="mb-0">${fiesta.localizacion}</h3>
+                <i class="fa-solid fa-bars info-icon" style="cursor:pointer;"></i>
+            </div>  
+            <p class='mt-2'><strong>Hora inicio:</strong> ${fiesta.hora}</p>
+            <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <p><strong>Tu alcohol:</strong> ${alcohol}</p>
+                <span><i class="fa-solid fa-user"></i> ${fiesta.contador}</span>
+            </div>   
+            <div class="d-flex justify-content-center align-items-center w-100">
+                <i class="fav fa-solid fa-heart mr-2"></i>
+                <i class="dislike fa-solid fa-x ml-2"></i>
+            </div>
+        `;
+}
