@@ -177,13 +177,28 @@ formulario.addEventListener("submit", async function(event) {
 
                 window.location.href = "/frontend/views/index/busqueda.html";  // Redirección tras registro exitoso
             } else {
-                alert("Error al almacenar los datos");
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: resultado.mensaje,
+                        confirmButtonColor: '#d33'
+                    });
             }
         } else {
-            alert("Error: " + resultado.mensaje);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: resultado.mensaje,
+                confirmButtonColor: '#d33'
+            });
         }
     } catch (error) {
         console.error("Error de conexión:", error);
-        alert("Hubo un problema con la conexión.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Hubo un problema con la conexion",
+            confirmButtonColor: '#d33'
+        });
     }
 });

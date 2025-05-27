@@ -9,7 +9,7 @@ const usuarioSchema = new mongoose.Schema({
     pass: { type: String, required: true },
     edad: { type: Number, required: true },
     ciudad: { type: String, required: true },
-    idFiestas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Fiesta', default: null }],
+    idFiestas: [{ type: Number, default: null }],
     amigos: [{ type: Number, ref: 'Usuario' }]
 });
 

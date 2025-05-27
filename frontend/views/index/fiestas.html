@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiestas</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/frontend/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/frontend/css/header.css">
-    <link rel="stylesheet" href="/frontend/css/fiesta.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiestas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="/frontend/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/frontend/css/header.css">
+  <link rel="stylesheet" href="/frontend/css/fiesta.css">
+ 
 
 </head>
+
 <body>
+
+  <nav class="header-container position-absolute w-100" id="header-container"></nav>
     <div class="row">
-        <div class="container-fluid">
-            <nav class="header-container position-absolute" id="header-container"></nav>
+      <div class="col-9">
+        <div class="container mt-5">
+          <div class="my-4">
+            <h3 id="fecha" class="busca text-light text-center"></h3>
+            <h3 id="tipo" class="busca text-primary text-center"></h3>
+          </div>
+          <div id="contenedorFiestas" class="d-flex justify-content-center gap-3"></div>
         </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col-8 mt-5 position-relative">
-            <h3 id="fecha" class="busca text-center text-light mt-5"></h3>
-            <h3 id="tipo" class="busca text-center text-primary"></h3>
-        </div>
-        <div class="col-4">
+      </div>
+      <div class="col-3">
+        <div class="sidebarAmigos position-absolute float-right">
 
         </div>
-        <div class="container mt-4 d-flex" id="contenedorFiestas"></div>
+      </div>
     </div>
-    <script type="module" src="/scripts/fiestas/scriptFiesta.js"></script>
-    <script src="/scripts/scriptHeader.js"></script>
+  <img class="aurora-1" src="https://cdn.openwebinars.net/static/public/images/aurora-1.60a81233ca02.webp" alt="Aurora">
+  <img class="aurora-2" src="https://cdn.openwebinars.net/static/public/images/aurora-2.fd71533d8ae9.webp" alt="Aurora">
+  <script type="module" src="/scripts/fiestas/scriptFiesta.js"></script>
+  <script src="/scripts/scriptHeader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

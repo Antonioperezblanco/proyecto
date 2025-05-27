@@ -1,54 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de sesión</title>
-    <link rel="stylesheet" href="/frontend/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/frontend/css/usuario.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </head>
 <body>
-    <div class="row">
-        <div class="container mt-5">
-            <div class="col">
-                <form method="post" class="p-4 border rounded shadow bg-white" action="http://127.0.0.1:3000/usuario/inicioSesion">
-                    <p class="info h2 text-dark">Iniciar Sesión</p>
-
-                    <label class="form-label">¿Cómo iniciar sesión?</label>
-                    <br>
-                    <input type="button" value="Nombre de usuario" id="btnUsuario" class="btn btn-dark">
-                    <input type="button" value="Correo electrónico" id="btnCorreo" class="btn btn-dark">
-                    <br>
-                    <div class="container mt-2">
-                        <label for="registro" id="registroLabel" class="form-label">Nombre de usuario</label>
-                        <input type="text" name="nombre" id="registro" class="form-control" placeholder="Nombre de usuario">
-                        <span  id="registroErr" class="text-danger"></span>
-                        <br>
-                    </div>
-                    <div class="container">
-                        <label class="form-label">Contraseña: </label>
-                        <input type="password" name="pass" id="pass" class="form-control" placeholder="Contraseña">
-                        <span class="text-danger" id="passErr"></span>
-                        <div class="showPass container d-flex justify-content-end align-items-center">
-                            <i class="fas fa-eye text-dark" id="show"></i>
-                            <span id="mostrarPass">Mostrar contraseña</span>
-                            <br>
-                        </div>
-                    </div>
-                    <input type="submit" class="btn btn-primary" value="Iniciar sesión" id="submit">
-                    <input type="reset" class="btn btn-secondary">
-                    <br>
-                    <span>¿No estás registrado aún? <a href="./CrearUsuario.html">Click aquí</a> </span>
-                    <span class="recuperar"><a href="./recuperarPass.html">Recuperar contraseña</a></span>
-                </form>
-            </div>
+    <div class="login-container">
+        <div class="login-header">
+            <h2>Bienvenido</h2>
+            <p class="login-subtitle">Inicia sesión para continuar</p>
         </div>
+        
+        <form method="post" class="login-form" action="http://127.0.0.1:3000/usuario/inicioSesion">
+            <div class="form-group">
+                <label class="form-label">¿Cómo iniciar sesión?</label>
+                <div class="login-method">
+                    <button type="button" id="btnUsuario" class="btn btn-dark">Usuario</button>
+                    <button type="button" id="btnCorreo" class="btn btn-dark">Correo</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="registro" id="registroLabel">Nombre de usuario</label>
+                <input type="text" name="nombre" id="registro" class="form-control">
+                <span id="registroErr" class="error-message"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="pass">Contraseña</label>
+                <input type="password" name="pass" id="pass" class="form-control">
+                <span id="passErr" class="error-message"></span>
+                <div class="show-pass">
+                    <i class="fas fa-eye" id="show"></i>
+                    <span id="mostrarPass">Mostrar contraseña</span>
+                </div>
+            </div>
+            
+            <div class="form-group d-grid gap-2">
+                <button type="submit" class="btn btn-primary" id="submit">Iniciar sesión</button>
+                <button type="reset" class="btn btn-secondary">Limpiar</button>
+            </div>
+            
+            <div class="login-links">
+                <span>¿No tienes cuenta?<a href="./CrearUsuario.html"> Regístrate</a></span> <br>
+                <a href="./recuperarPass.html">¿Olvidaste tu contraseña?</a>
+            </div>
+        </form>
     </div>
-</div>    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/usuarios/scriptInicioSesion.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

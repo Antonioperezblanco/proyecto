@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
             mostrarSolicitudes();
             mostrarAmigos();
             mostrarConfig();
+            cerrarSesion();
         })
         .catch(error => console.error('Error cargando el header:', error));
 });
@@ -24,6 +25,29 @@ function contarSolicitudes(){
         numeroNotificaciones.textContent = "9+"
     }
 }
+
+function cerrarSesion() {
+    const logout = document.getElementById("logout");
+
+    logout.addEventListener("click", () => {
+        Swal.fire({
+            title: '¿Estás seguro de que quieres cerrar sesión?',
+            text: "Tendrás que iniciar sesión de nuevo para acceder.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, cerrar sesión',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sessionStorage.setItem("origen", "");
+                window.location.href = "/frontend/views/usuarios/InicioSesion.html";
+            }
+        });
+    });
+}
+
 
 //Función para al dar click al nombre de usuario te salga un formulario para poder editarlo
 function iniciarEdicionUsuario() {
@@ -75,11 +99,21 @@ function iniciarEdicionUsuario() {
                 overlay.style.display = 'none';
                 location.reload();
             } else {
-                alert("Error: " + resultado.mensaje);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: resultado.mensaje,
+                    confirmButtonColor: '#d33'
+                });
             }
         } catch (error) {
             console.log("Error de conexión:", error);
-            alert("Problema con la conexión");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Problema con la conexión",
+                confirmButtonColor: '#d33'
+            });
         }
     });
 
@@ -87,22 +121,36 @@ function iniciarEdicionUsuario() {
         event.preventDefault();
         overlay.style.display = 'none';
     })
-}function mostrarConfig() {
+}
+
+function mostrarConfig() {
     const config = document.getElementById("config");
     const sidebar = document.getElementById("sidebar");
 
     config.addEventListener("click", () => {
         sidebar.classList.toggle('mostrar');
+        
+        let inicio = '0px';
+    let final;
 
-        if (sidebar.classList.contains('mostrar')) {
-            config.className = "fa-solid fa-arrow-left"
-            config.style.setProperty('--inicio', '0px');
-            config.style.setProperty('--final', '400px');
-        } else {
-            config.className = "fa-solid fa-bars"
-            config.style.setProperty('--inicio', '400px');
-            config.style.setProperty('--final', '0px');
-        }
+    if (window.innerWidth <= 480) {
+        final = '50px';
+    } else if (window.innerHeight> 480 && window.innerWidth <= 700) {
+        final = '200px';
+    } else {
+        final = '400px';
+    }
+
+    if (sidebar.classList.contains('mostrar')) {
+        config.className = "fa-solid fa-arrow-left";
+        config.style.setProperty('--inicio', inicio);
+        config.style.setProperty('--final', final);
+    } else {
+        config.className = "fa-solid fa-bars";
+        config.style.setProperty('--inicio', final);
+        config.style.setProperty('--final', inicio);
+    }
+        
 
         // Resetear la animación (clave para que se vuelva a aplicar)
         config.classList.remove('rebote');
@@ -171,7 +219,12 @@ function configurarFormularioAmigo() {
         const nombreAmigo = document.getElementById("anadir")?.value.trim();
 
         if (!nombreAmigo) {
-            alert("Por favor, introduce el nombre de usuario del amigo");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Por favor, introduce el nombre de usuario del amigo",
+                confirmButtonColor: '#d33'
+            });
             return;
         }
 
@@ -190,14 +243,29 @@ function configurarFormularioAmigo() {
             const resultado = await respuesta.json();
 
             if (respuesta.ok) {
-                alert("Solicitud de amistad enviada");
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Solicitud enviada',
+                    text: 'La solicitud de amistad ha sido enviada.',
+                    confirmButtonColor: '#3085d6'
+                });
                 document.getElementById("anadir").value = ""; 
             } else {
-                alert("Error: " + resultado.mensaje);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: resultado.mensaje,
+                    confirmButtonColor: '#d33'
+                });
             }
         } catch (error) {
             console.error("Error de conexión:", error);
-            alert("Hubo un error al intentar enviar la solicitud");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Hubo un error al intentar enviar la solicitud",
+                confirmButtonColor: '#d33'
+            });
         }
     });
 }
@@ -253,12 +321,23 @@ async function aceptar(i) {
             solicitudes.splice(i, 1);
             sessionStorage.setItem('solicitudes', JSON.stringify(solicitudes));
             mostrarSolicitudes();
-            alert("Solicitud aceptada")
+            Swal.fire({
+                icon: 'info',
+                title: '¡Genial!',
+                text: 'Solicitud aceptada',
+                timer: 2000,
+                showConfirmButton: false
+            });
             location.reload();
 
             
         } else {
-            alert(resultado.mensaje || 'Error al aceptar solicitud');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: resultado.mensaje || 'Error al aceptar solicitud',
+                confirmButtonColor: '#d33'
+            });
         }
     } catch (error) {
         console.error('Error aceptando solicitud: ', error);
@@ -286,12 +365,22 @@ async function rechazar(i) {
             solicitudes.splice(i, 1);
             sessionStorage.setItem('solicitudes', JSON.stringify(solicitudes));
             mostrarSolicitudes();
-            alert("Solicitud rechazada")
+            Swal.fire({
+                icon: 'info',
+                title: 'Solicitud rechazada',
+                text: 'La solicitud de amistad ha sido rechazada.',
+                confirmButtonColor: '#3085d6'
+            });
             location.reload();
 
             
         } else {
-            alert(resultado.mensaje || 'Error al rechazar solicitud');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: resultado.mensaje || 'Error al rechazar solicitud',
+                confirmButtonColor: '#d33'
+            });
         }
     } catch (error) {
         console.error('Error rechazando solicitud: ', error);
@@ -329,14 +418,27 @@ async function mostrarAmigos() {
     });
 }
 async function eliminar(i) {
-    if (confirm("Seguro que desea eliminar")){
-            // Obtener datos del almacenamiento de sesión
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+}).then(async (result) => {
+    if (result.isConfirmed) {
         const amigos = JSON.parse(sessionStorage.getItem('amigos'));
         const usuario = JSON.parse(sessionStorage.getItem('usuario'));
 
-        // Verificar que el índice y los datos existan
         if (!amigos[i] || !usuario) {
-            alert('Datos no encontrados');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Datos no encontrados",
+                confirmButtonColor: '#d33'
+            });
             return;
         }
 
@@ -366,14 +468,25 @@ async function eliminar(i) {
             
             // Actualizar UI
             mostrarAmigos();
-            alert("Amigo eliminado correctamente");
+            Swal.fire({
+                icon: 'info',
+                title: 'Amigo eliminado',
+                text: 'Amigo eliminado correctamente.',
+                confirmButtonColor: '#3085d6'
+            });
             
             // Recargar la página
             location.reload();
 
         } catch (error) {
             console.error('Error eliminando amigo: ', error);
-            alert(error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.mensaje,
+                confirmButtonColor: '#d33'
+            });
         }
     }
+    })
 }

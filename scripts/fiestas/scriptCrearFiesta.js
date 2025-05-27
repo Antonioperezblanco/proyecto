@@ -55,7 +55,7 @@ if (sessionStorage.getItem("origen") == "inicio" || sessionStorage.getItem("orig
             inputNombre.type = "text";
             inputNombre.name="nombre";
             inputNombre.id="nombreDiscoteca";
-            inputNombre.className ="form-control w-50";
+            inputNombre.className ="form-control";
 
             const nombreErr = document.createElement("span");
             nombreErr.id="nombreErr";
@@ -74,7 +74,7 @@ if (sessionStorage.getItem("origen") == "inicio" || sessionStorage.getItem("orig
             inputPrecio.type="number";
             inputPrecio.name="precioDiscoteca";
             inputPrecio.id="precioDisco";
-            inputPrecio.className = "form-control w-25"
+            inputPrecio.className = "form-control w-50"
 
             const spanPrecio = document.createElement("span");
             spanPrecio.id="precioDiscoErr";
@@ -316,9 +316,14 @@ formFiesta.addEventListener("submit", async function(event){
             const resultado = await respuesta.json();
     
             if (respuesta.ok) {
-                window.location.href = '/frontend/views/index/busqueda.html';  // Redirige a la página de búsqueda si la fiesta se crea correctamente
+                window.location.href = '/frontend/views/index/busqueda.html'; 
             } else {
-                alert("Error:" + resultado.mensaje);
+                Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: resultado.mensaje,
+                confirmButtonColor: '#d33'
+            });
             }
         } catch (error) {
             console.error("Error de conexión:", error);

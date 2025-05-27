@@ -43,12 +43,28 @@ formInicio.addEventListener("submit", async function(event) {
         const resultado = await respuesta.json(); 
 
         if (respuesta.ok) {
-            alert("Revise su correo");
+            Swal.fire({
+                icon: 'success',
+                title: '¡Genial!',
+                text: 'Revise su correo',
+                timer: 2000,
+                showConfirmButton: false
+            });
         } else {
-            alert("Error: " + resultado.mensaje);  
+            Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: resultado.mensaje,
+            confirmButtonColor: '#d33'
+        });
         }
     } catch (error) {
         console.error("Error de conexión:", error);
-        alert("Hubo un error al intentar iniciar sesión");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Hubo un error al recuperar la contraseña",
+            confirmButtonColor: '#d33'
+        });
     }
 });

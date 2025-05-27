@@ -122,13 +122,28 @@ formInicio.addEventListener("submit", async function(event) {
             if (sessionStorage.getItem("usuario")){
                   window.location.href = "/frontend/views/index/busqueda.html";  
             } else {
-                alert("Error al almacenar los datos")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: resultado.mensaje,
+                    confirmButtonColor: '#d33'
+                });
             }
         } else {
-            alert("Error: " + resultado.mensaje);  
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: resultado.mensaje,
+                confirmButtonColor: '#d33'
+            });
         }
     } catch (error) {
         console.error("Error de conexión:", error);
-        alert("Hubo un error al intentar iniciar sesión");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Hubo un error al intentar iniciar sesión",
+            confirmButtonColor: '#d33'
+        });
     }
 });

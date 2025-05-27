@@ -1,106 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir fiesta</title>
+    <title>Subir Fiesta</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/frontend/css/bootstrap.min.css">
     <link rel="stylesheet" href="/frontend/css/fiesta.css">
     <link rel="stylesheet" href="/frontend/css/header.css">
-
-    
 </head>
+
 <body>
     <nav class="header-container position-absolute" id="header-container"></nav>
-    <div class="formContainer">
-        <form method="post" class="formBody bg-white p-4 border rounded shadow" action="http://127.0.0.1:3000/fiesta/crear">
-            <h2>Subir Fiesta</h2>
-            <label for="tipoFiesta" class="form-label">Tipo de fiesta: </label>
-            <select name="tipo" id="tipoFiesta" class="form-control w-50">
+
+    <div class="formContainer w-75 d-flex justify-content-center">
+        <form method="post" class="formBody" action="http://127.0.0.1:3000/fiesta/crear">
+            <h2 class="text-center mb-4">Subir Fiesta</h2>
+
+            <div class="mb-3">
+              <label for="tipoFiesta" class="form-label">Tipo de fiesta:</label>
+              <select name="tipo" id="tipoFiesta" class="form-control">
                 <option value="">Selecciona el tipo de fiesta</option>
                 <option value="discoteca">Discoteca</option>
                 <option value="fiestaPrivada">Fiesta privada</option>
-            </select>
-            <span id="tipoFiestaErr" class="text-danger"></span>
-            <br>
-            
-            <h3>Localizacion y fecha </h3>
+              </select>
+              <span id="tipoFiestaErr" class="text-danger small"></span>
+            </div>
+
+            <h3 class="mt-4">Localización y fecha</h3>
 
             <div id="nombre"></div>
 
-            <label for="ciudad">Ciudad: </label>
-            <select name="ciudad" id="ciudad" class="form-control w-50">
-                <option value="">Selecciona una ciudad</option>
-                <option value="Madrid">Madrid</option>
-                <option value="Barcelona">Barcelona</option>
-            </select>
-            <span id="ciudadErr" class="text-danger"></span>
-            <br>
-
-            <label class="form-label">Localizacion: </label>
-            <input type="text" name="localizacion" id="localizacion" class="form-control w-50">
-            <span id="localizacionErr" class="text-danger"></span>
-            <br>
-            <div class="contenedor d-flex justify-content-between">
-
-            <label for="fecha" class="form-label">Fecha: </label>
-            <input type="date" name="fecha" id="fecha" class="form-control form-control-sm w-25 ">
-
-            <label for="hora" class="form-label">Hora: </label>
-            <input type="time" name="hora" id="hora" class="form-control form-control-sm w-25">
-            <br>
-            <span id="fechaErr" class="text-danger"></span>
-            <span id="horaErr" class="text-danger"></span>
-            <br>
+            <div class="mb-3">
+                <label for="ciudad" class="form-label">Ciudad:</label>
+                <select name="ciudad" id="ciudad" class="form-control">
+                  <option value="">Selecciona una ciudad</option>
+                  <option value="Madrid">Madrid</option>
+                  <option value="Barcelona">Barcelona</option>
+                </select>
+                <span id="ciudadErr" class="text-danger small"></span>
             </div>
-            <h3 >Información general</h3>
 
-            <label class="form-label">Requisito de vestimenta: </label>
-            <select name="vestimenta" id="vestimenta" class="form-control w-50">
-                <option value="">Selecciona el tipo de vestimenta</option>
-                <option value="ninguno">Ninguno</option>
-                <option value="etiqueta">Etiqueta</option>
-                <option value="elegante">Elegante(Camisa, chinos, mocasines)</option>
-                <option value="casual">Casual (Vaqueros, camisas informales, deportivas)</option>
-                <option value="ibicenca">Ibicenca (Blanco entero)</option>
-                <option value="disfraces">De disfraces</option>
-                <option value="tematica">Fiesta tematica</option>
-            </select>
-            <span id="vestimentaErr" class="text-danger"></span>
-            <br>
+            <div class="mb-3">
+                <label for="localizacion" class="form-label">Localización:</label>
+                <input type="text" name="localizacion" id="localizacion" class="form-control">
+                <span id="localizacionErr" class="text-danger small"></span>
+            </div>
 
-            <label for="musica" class="form-label">Tipo de musica</label>
-            <input type="text" name="musica" id="tipoMusica" class="form-control w-50">
-            <span id="musicaErr" class="text-danger"></span>
-            <br>    
+            <div class="d-flex gap-3 flex-wrap">
+                <div class="flex-fill">
+                    <label for="fecha" class="form-label">Fecha:</label>
+                    <input type="date" name="fecha" id="fecha" class="form-control">
+                    <span id="fechaErr" class="text-danger small"></span>
+                </div>
 
-            <h3>Precios</h3>
+                <div class="flex-fill ml-2">
+                    <label for="hora" class="form-label">Hora:</label>
+                    <input type="time" name="hora" id="hora" class="form-control">
+                    <span id="horaErr" class="text-danger small"></span>
+                </div>
+            </div>
 
-            <div id="tuAlcohol" class="d-flex justify-content-start p-4"></div>
+            <h3 class="mt-4">Información general</h3>
 
-            <div id="precioDiscoteca"></div>
+            <div class="mb-3">
+                <label for="vestimenta" class="form-label">Requisito de vestimenta:</label>
+                <select name="vestimenta" id="vestimenta" class="form-control">
+                    <option value="">Selecciona el tipo de vestimenta</option>
+                    <option value="ninguno">Ninguno</option>
+                    <option value="etiqueta">Etiqueta</option>
+                    <option value="elegante">Elegante (Camisa, chinos, mocasines)</option>
+                    <option value="casual">Casual (Vaqueros, camisas informales, deportivas)</option>
+                    <option value="ibicenca">Ibicenca (Blanco entero)</option>
+                    <option value="disfraces">De disfraces</option>
+                    <option value="tematica">Fiesta temática</option>
+                </select>
+                <span id="vestimentaErr" class="text-danger small"></span>
+            </div>
 
-            <label class="form-label" for="combinado">Precio combinado: </label>
-            <input type="number" id="combinado" name="combinado" class="form-control w-25">
-            <span id="combinadoErr" class="text-danger"></span>
-            <br>
+            <div class="mb-3">
+                <label for="musica" class="form-label">Tipo de música:</label>
+                <input type="text" name="musica" id="tipoMusica" class="form-control">
+                <span id="musicaErr" class="text-danger small"></span>
+            </div>
 
-            <label for="cerveza" class="form-label">Precio de cerveza: </label>
-            <input type="number" id="cerveza" name="cerveza" class="form-control w-25">
-            <span id="cervezaErr" class="text-danger"></span>
-            <br>
+            <h3 class="mt-4">Precios</h3>
 
-            <label for="refresco" class="form-label">Precio de refresco: </label>
-            <input type="number" id="refresco" name="refresco" class="form-control w-25">
-            <span id="refrescoErr" class="text-danger"></span>
-            <br>
+            <div id="tuAlcohol" class="d-flex flex-wrap gap-3 mb-3"></div>
+            <div id="precioDiscoteca" class="mb-3"></div>
 
-            <input type="submit" id="botonSubmit" class="btn btn-secondary" value="Guardar">
+            <div class="mb-3">
+                <label for="combinado" class="form-label">Precio combinado:</label>
+                <input type="number" id="combinado" name="combinado" class="form-control w-50">
+                <span id="combinadoErr" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="cerveza" class="form-label">Precio de cerveza:</label>
+                <input type="number" id="cerveza" name="cerveza" class="form-control w-50">
+                <span id="cervezaErr" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label for="refresco" class="form-label">Precio de refresco:</label>
+                <input type="number" id="refresco" name="refresco" class="form-control w-50">
+                <span id="refrescoErr" class="text-danger small"></span>
+            </div>
+
+            <div class="text-center">
+                <input type="submit" id="botonSubmit" class="btn btn-secondary w-50" value="Guardar">
+            </div>
         </form>
-    </div>
-    <script src="/scripts/fiestas/scriptCrearFiesta.js"></script>
-    <script src="/scripts/scriptHeader.js"></script>
-
+  </div>
+  <img class="aurora-1" src="https://cdn.openwebinars.net/static/public/images/aurora-1.60a81233ca02.webp" alt="Aurora">
+  <img class="aurora-2" src="https://cdn.openwebinars.net/static/public/images/aurora-2.fd71533d8ae9.webp" alt="Aurora">
+  <script src="/scripts/fiestas/scriptCrearFiesta.js"></script>
+  <script src="/scripts/scriptHeader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

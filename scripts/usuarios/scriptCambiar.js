@@ -87,9 +87,20 @@ formInicio.addEventListener("submit", async function(event) {
         const resultado = await respuesta.json(); 
 
         
-            alert("Contraseña actualizada")
+            Swal.fire({
+                        icon: 'success',
+                        title: '¡Genial!',
+                        text: 'Contraseña actualizada',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
     } catch (error) {
         console.error("Error de conexión:", error);
-        alert(`Error: ${error.message}`);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error.mensaje,
+            confirmButtonColor: '#d33'
+        });
     }
 });

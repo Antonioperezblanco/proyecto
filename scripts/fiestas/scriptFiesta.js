@@ -21,9 +21,11 @@ if (sessionStorage.getItem('origen') == 'crear' || sessionStorage.getItem('orige
     fecha.textContent = `${dia}/${mes}/${anio}`;
 
      // Enviar al backend
+    const usuario = JSON.parse(sessionStorage.getItem('usuario'));
     const datos = {
         fecha: fechaString,
-        tipo: sessionStorage.getItem('tipo')
+        tipo: sessionStorage.getItem('tipo'),
+        nombreUsuario: usuario.nombreUsuario
     };
 
     try{
@@ -81,7 +83,7 @@ function mostrarFiestas(fiestas) {
     const div = document.createElement("div");
     const div2 = document.createElement("div");
     div.classList.add("card", "m-2", "p-4", "tarjeta", "w-75");
-    div2.classList.add("infor", "w-50");
+    div2.classList.add("infor", "w-auto");
 
     if (tipo === "discoteca") {
         mostrarDiscoteca(div, div2, fiesta);
@@ -103,7 +105,46 @@ function mostrarFiestas(fiestas) {
     const btnNo = div.querySelector(".dislike");
 
     if (btnFavorito) {
-        btnFavorito.addEventListener("click", () => {
+        btnFavorito.addEventListener("click", async () => {
+            const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+            const nombreUsuario = usuario.nombreUsuario
+
+            let fiestaParaEnviar = {
+            ...fiesta,
+            id: fiesta.idDiscoteca || fiesta.idFiestaPrivada 
+            };
+
+            try{
+                 const respuesta = await fetch('http://127.0.0.1:3000/fiesta/unirse', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nombreUsuario,  
+                        fiesta: fiestaParaEnviar
+                    })
+                })
+                const resultado = await respuesta.json();
+    
+                if (respuesta.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Genial!',
+                        text: 'Te has unido a la fiesta',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                     Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: resultado.mensaje,
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            } catch (error){
+                console.error("Error al unirse a la fiesta:", error);
+            }
+
             div.classList.add("swipe-left");
             div2.classList.add("swipe-left");
             setTimeout(() => {
