@@ -49,8 +49,13 @@ app.use('/pass', passwordRoutes);
 // 6. Archivos estáticos generales (DEBE IR DESPUÉS de las rutas dinámicas)
 app.use(express.static(path.join(__dirname, 'frontend'), {
     extensions: ['html'],
-    index: false 
+    index: 'index.html'
 }));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
+
 
 // 7. Manejo de errores
 app.use((err, req, res, next) => {
