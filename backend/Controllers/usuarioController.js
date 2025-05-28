@@ -2,6 +2,8 @@ import bcrypt from 'bcrypt';
 import Usuario from '../models/Usuario.js';
 import { findByUsername, findByMail, findByUsernameOrMail, findById, saveUser, existeAmigo, deleteSolicitud, addAmigo, amigos } from '../database/usuariosDB.js';
 import { createSolicitud, existeSolicitud, obtenerSolicitudesRecibidas } from '../database/solicitudDB.js';
+import Discoteca from '../models/Discoteca.js';
+import FiestaPrivada from '../models/FiestaPrivada.js';
 
 export const crearUsuario = async (req, res) => {
     try {
@@ -221,3 +223,73 @@ export const eliminarAmigo = async (req, res) => {
         res.status(500).json({ mensaje: 'Error interno', error: error.message });
     }
 };
+
+export const mostrarAmigos = async (req, res) => {
+    try {
+        const { fecha, nombreUsuario } = req.body;
+
+        const usuario = await findByUsername(nombreUsuario);
+
+        if (!usuario){
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+        }
+
+        const fechaISO = `${fecha}T00:00:00.000Z`;
+        const fechaInicio = new Date(fechaISO);
+        const fechaFin = new Date(fechaISO);
+        fechaFin.setUTCHours(23, 59, 59, 999);
+
+        const amigosIds = usuario.amigos; 
+        if (!amigosIds || amigosIds.length === 0){
+            return res.status(200).json({ mensaje: "El usuario no tiene amigos registrados", amigosFiestas: [] });
+        }
+
+        console.log("Buscando fiestas para la fecha:", fecha);
+        console.log("Usuario:", nombreUsuario);
+        console.log("Amigos:", usuario.amigos);
+
+        // Obtén los usuarios amigos
+        const amigos = await Usuario.find({ id: { $in: amigosIds } });
+
+        const amigosFiestas = [];
+
+        for (let amigo of amigos){
+            const fiestaIds = amigo.idFiestas || [];
+
+            if (fiestaIds.length === 0) continue;
+
+            // Buscar todas las Discotecas que coinciden con los ids y fecha
+            const discotecas = await Discoteca.find({
+                idDiscoteca: { $in: fiestaIds },
+                fecha: { $gte: fechaInicio, $lte: fechaFin }
+            });
+
+            // Buscar todas las Fiestas Privadas que coinciden con los ids y fecha
+            const fiestasPrivadas = await FiestaPrivada.find({
+                idFiestaPrivada: { $in: fiestaIds },
+                fecha: { $gte: fechaInicio, $lte: fechaFin }
+            });
+
+            // Combinar resultados
+            const fiestaAmigo = [...discotecas, ...fiestasPrivadas];
+
+            console.log(`Fiestas del amigo ${amigo.nombreUsuario}:`, fiestaAmigo);
+
+            if (fiestaAmigo.length > 0){
+                amigosFiestas.push({
+                    amigo: amigo.nombreUsuario,
+                    fiestas: fiestaAmigo
+                });
+            }
+        }
+
+        return res.status(200).json({
+            mensaje: "Fiestas de los amigos encontradas",
+            amigosFiestas
+        });
+
+    } catch(error){
+        console.log("Error al buscar fiestas de amigos: ", error);
+        return res.status(500).json({ mensaje: "Error al buscar fiestas de amigos", error });
+    }
+}

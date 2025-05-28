@@ -43,10 +43,55 @@ if (sessionStorage.getItem('origen') == 'crear' || sessionStorage.getItem('orige
     } catch (error){
         console.error("Error de conexión:", error);
     }
+    
+    try{
+        const dato = {
+            fecha: fechaString,
+            nombreUsuario: usuario.nombreUsuario
+        }
+        console.log(dato)
+        const response = await fetch('http://127.0.0.1:3000/fiesta/mostrar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dato)
+        })
+        const data = await response.json();
+        const contenedorAmigos = document.getElementById('contenedorAmigos');
+        contenedorAmigos.innerHTML = "";
+
+        if (!data.amigosFiestas || data.amigosFiestas.length === 0) {
+            contenedorAmigos.innerHTML = '<p class="text-white">No hay amigos con fiestas ese día.</p>';
+        }
+
+        data.amigosFiestas.forEach(amigoObj => {
+            const amigoDiv = document.createElement('div');
+            amigoDiv.classList.add('amigo-card', 'mb-3', 'p-2', 'bg-dark', 'text-light', 'rounded');
+
+            let html = `<h5>${amigoObj.amigo}</h5><ul class="list-unstyled">`;
+
+            amigoObj.fiestas.forEach(fiesta => {
+                if (fiesta.nombre){
+                    html += `<li>- <strong>Nombre:</strong>  ${fiesta.nombre}, <strong>Localización:</strong>  ${fiesta.localizacion}</li>`;
+                }else{
+                    html += ` <li>- <strong>Localización:</strong>  ${fiesta.localizacion}</li>`;
+                }
+                
+            });
+
+            html += '</ul>';
+
+            amigoDiv.innerHTML = html;
+            contenedorAmigos.appendChild(amigoDiv);
+        });
+
+    } catch (error){
+        console.log("Error al cargar las fiestas de amigos", error);
+    }
 
 } else{
     window.location.href = "/frontend/views/usuarios/CrearUsuario.html"; 
 }
+
 function mostrarFiestas(fiestas) {
     const contenedor = document.getElementById("contenedorFiestas");
     const tipo = sessionStorage.getItem("tipo");

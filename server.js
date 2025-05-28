@@ -34,7 +34,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 3. Configuración CORS
-app.use(cors());
+app.use(cors({
+    origin: 'http://127.0.0.1:5500',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // 4. Archivos estáticos (ORDEN CRÍTICO)
 app.use('/css', express.static(path.join(__dirname, 'frontend', 'css')));
@@ -49,13 +53,8 @@ app.use('/pass', passwordRoutes);
 // 6. Archivos estáticos generales (DEBE IR DESPUÉS de las rutas dinámicas)
 app.use(express.static(path.join(__dirname, 'frontend'), {
     extensions: ['html'],
-    index: 'index.html'
+    index: false 
 }));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
-
 
 // 7. Manejo de errores
 app.use((err, req, res, next) => {
@@ -65,7 +64,7 @@ app.use((err, req, res, next) => {
 
 // 8. Inicio del servidor
 const PORT = 3000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor corriendo en http://0.0.0.0:${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
     console.log(`Ruta frontend: ${path.join(__dirname, 'frontend')}`);
 });
