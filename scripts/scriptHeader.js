@@ -134,9 +134,9 @@ function mostrarConfig() {
     let final;
 
     if (window.innerWidth <= 480) {
-        final = '50px';
-    } else if (window.innerHeight> 480 && window.innerWidth <= 700) {
         final = '200px';
+    } else if (window.innerHeight> 480 && window.innerWidth <= 700) {
+        final = '300px';
     } else {
         final = '400px';
     }

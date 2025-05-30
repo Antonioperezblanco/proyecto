@@ -177,3 +177,68 @@ export const unirseFiesta = async (req, res) => {
         res.status(500).json({ mensaje: 'Error al unirse a la fiesta' });
     }
 }
+
+export const cambiarCiudad = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { fecha, tipo, nombreUsuario, ciudad } = req.body;
+
+        const usuario = await findByUsername(nombreUsuario);
+
+        if (!usuario) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+        }
+
+        let nuevaCiudad;
+        // Invertir la ciudad
+        if (ciudad.toLowerCase() === 'madrid') {
+            nuevaCiudad = 'Barcelona';
+        } else if (ciudad.toLowerCase() === 'barcelona') {
+            nuevaCiudad = 'Madrid';
+        } else {
+            return res.status(400).json({ mensaje: 'Ciudad no soportada' });
+        }
+
+        const fechaISO = `${fecha}T00:00:00.000Z`;
+        const fechaInicio = new Date(fechaISO);
+        const fechaFin = new Date(fechaISO);
+        fechaFin.setUTCHours(23, 59, 59, 999);
+
+        console.log("Fecha de inicio:", fechaInicio);
+        console.log("Fecha de fin:", fechaFin);
+        console.log("Ciudad buscada:", ciudad);
+
+        let fiestas = [];
+
+        const query = {
+            fecha: {
+                $gte: fechaInicio,
+                $lte: fechaFin
+            },
+            ciudad: { $regex: new RegExp(`^${nuevaCiudad}$`, 'i') }
+        };
+
+        if (tipo === "discoteca") {
+            fiestas = await Discoteca.find(query);
+        } else if (tipo === "fiesta") {
+            fiestas = await FiestaPrivada.find(query);
+        } else if (tipo === "ambas") {
+            const [discotecas, privadas] = await Promise.all([
+                Discoteca.find(query),
+                FiestaPrivada.find(query)
+            ]);
+            fiestas = [...discotecas, ...privadas];
+        }
+
+        console.log("Fiestas encontradas:", fiestas);
+
+        res.status(200).json({
+            mensaje: "Fiestas encontradas",
+            fiestas,
+            ciudadCambiada: nuevaCiudad
+        });
+    } catch (error) {
+        console.log("Error al encontrar fiestas: ", error);
+        res.status(500).json({ mensaje: 'Error al buscar fiestas', error: error });
+    }
+}

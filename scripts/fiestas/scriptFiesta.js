@@ -88,6 +88,43 @@ if (sessionStorage.getItem('origen') == 'crear' || sessionStorage.getItem('orige
         console.log("Error al cargar las fiestas de amigos", error);
     }
 
+    const botonCiudad = document.getElementById("botonCiudad");
+    botonCiudad.addEventListener("click", async () => {
+        try{
+            const fechaString = sessionStorage.getItem("fecha");
+            const ciudad = usuario.ciudad
+            const nombreUsuario = usuario.nombreUsuario;
+            const datos =  {
+                fecha: fechaString,
+                tipo: sessionStorage.getItem("tipo"),
+                nombreUsuario: nombreUsuario,
+                ciudad: ciudad
+            };
+            const response = await fetch('http://127.0.0.1:3000/fiesta/cambiarCiudad', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+            const resultado = await response.json();
+            console.log(resultado);
+
+            if (response.ok) {
+                Swal.fire({
+                        icon: 'success',
+                        title: '¡Genial!',
+                        text: `Ahora estás buscando en ${resultado.ciudadCambiada}`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                usuario.ciudad = resultado.ciudadCambiada;
+                document.getElementById("contenedorFiestas").innerHTML = ""
+                mostrarFiestas(resultado.fiestas);
+            } 
+        }catch(error){
+            console.error("Error de conexión:", error);
+        }
+    })
+    
 } else{
     window.location.href = "/frontend/views/usuarios/CrearUsuario.html"; 
 }
@@ -258,6 +295,7 @@ function mostrarFiestas(fiestas) {
 
     renderFiesta(indiceActual); 
 }
+
 
 
 function mostrarDiscoteca(div, div2, fiesta) {
