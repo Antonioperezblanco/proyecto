@@ -110,14 +110,15 @@ body {
   opacity: 0.4;
 }
 
-.cerveza, .combinado, .refresco{
+.cerveza, .combinado, .refresco, .precioDiscoteca{
         width: 50%;
     }
 
 @media (max-width: 768px) {
-    .cerveza, .combinado, .refresco{
+    .cerveza, .combinado, .refresco, .precioDiscoteca{
         width: 100%;
     }
+
 }
 @media (max-width: 480px) {
     .cerveza, .combinado, .refresco{

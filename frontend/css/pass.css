@@ -1,0 +1,67 @@
+:root {
+  --primary-color: #4361ee;
+  --secondary-color: #3f37c9;
+  --dark-color: #1a1a2e;
+  --light-color: #f8f9fa;
+  --accent-color: #4cc9f0;
+  --error-color: #f72585;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
+}
+
+body {
+  background-color: var(--dark-color);
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--light-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem;
+  overflow-x: hidden;
+}
+
+.passContainer {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: var(--transition);
+  padding: 2rem;
+  background-color: #2a2a3a;
+  color: var(--light-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: none;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: var(--transition);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--light-color);
+  appearance: none;
+}
+
+.showPass{
+    cursor: pointer;
+    
+}
+.boton{
+    padding: 10px 15px;
+}
+.boton:hover{
+    transform:scale(1.1);
+}
+
+@media (max-width: 576px) {
+.passContainer{
+    width: 100%;
+}
+.boton{
+    margin-top: 10px;
+    width: 100%;
+}
+}

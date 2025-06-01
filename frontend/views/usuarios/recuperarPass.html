@@ -5,22 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar contraseña</title>
     <link rel="stylesheet" href="/frontend/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/frontend/css/usuario.css">
+    <link rel="stylesheet" href="/frontend/css/pass.css">
 
 
 </head>
 <body>
     <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-8 mt-5">
-            <form action="http://127.0.0.1:3000/pass/solicitar" method="post" class="p-4 border rounded shadow bg-white pt-5 mt-5">
+        <div class="col mt-5 passContainer">
+            <h2>Recuperar contraseña</h2>
+            <form action="http://127.0.0.1:3000/pass/solicitar" method="post" class="form p-4 rounded shadow pt-5">
                 <div class="container">
                     <label class="form-label">Correo: </label>
                     <div class="row mt-3">
-                        <div class="col-6">
-                            <input type="email" name="email" id="email" class="form-control" placeholder="Correo">
+                        <div class="col-md-6 col-sm-12">
+                            <input type="email" name="email" id="email" class="mail form-control">
                         </div>
-                        <div class="col-6">
-                             <input type="submit" id="submit" value="Buscar" class="btn btn-primary">
+                        <div class="col-md-6 col-sm-12">
+                             <input type="submit" id="submit" value="Buscar" class="boton btn btn-primary">
                         </div>
                     </div>
                     

@@ -74,7 +74,7 @@ if (sessionStorage.getItem("origen") == "inicio" || sessionStorage.getItem("orig
             inputPrecio.type="number";
             inputPrecio.name="precioDiscoteca";
             inputPrecio.id="precioDisco";
-            inputPrecio.className = "form-control w-50"
+            inputPrecio.className = "form-control"
 
             const spanPrecio = document.createElement("span");
             spanPrecio.id="precioDiscoErr";
