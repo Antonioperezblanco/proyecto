@@ -1,8 +1,8 @@
 // Variables para mostrar la contraseña
-const mostrar = document.getElementById("show");  // Icono ojo
-const pass = document.getElementById("pass");   // Input contraseña
-const confPass = document.getElementById("confPass");   // Input confirmar contraseña
-const mostrarPass = document.getElementById("mostrarPass");  // Span texto icono
+const mostrar = document.getElementById("show");  
+const pass = document.getElementById("pass");   
+const confPass = document.getElementById("confPass");
+const mostrarPass = document.getElementById("mostrarPass");
 
 // Elementos del formulario
 const formulario = document.querySelector("form")
@@ -108,7 +108,7 @@ edad.addEventListener("input", () => {
         edadError.textContent = "Edad no válida";
         edad.style.outline = 'red 2px solid';
     } else {
-        edadError.textContent = "";   // Vacío el span de error en caso de que esté bien
+        edadError.textContent = "";   
         edad.style.outline = 'none';  
     } 
     checkValidations();
@@ -125,8 +125,6 @@ ciudad.addEventListener("input", () => {
     checkValidations();
 });
 
-
-// Función para comprobar si todos los campos son válidos
 function checkValidations() {
     let valido = true;
 
@@ -137,7 +135,7 @@ function checkValidations() {
     if (!edad.value || parseInt(edad.value) < 18 || parseInt(edad.value) > 120) valido = false;
     if (ciudad.value === "0") valido = false;
     
-    submitButton.disabled = !valido;  // Habilita el botón solo si los campos son válidos
+    submitButton.disabled = !valido; 
 
     if (valido) {
         submitButton.className = "btn btn-success";
@@ -146,7 +144,6 @@ function checkValidations() {
     }
 }
 
-// Enviar datos al servidor
 formulario.addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -175,7 +172,7 @@ formulario.addEventListener("submit", async function(event) {
             if (usuarioGuardado) {
                 console.log("Usuario guardado:", JSON.parse(usuarioGuardado));
 
-                window.location.href = "/frontend/views/index/busqueda.html";  // Redirección tras registro exitoso
+                window.location.href = "/frontend/views/index/busqueda.html"; 
             } else {
                 Swal.fire({
                         icon: 'error',

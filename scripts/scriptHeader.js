@@ -85,7 +85,7 @@ function iniciarEdicionUsuario() {
             edad: document.getElementById('edad').value,
             ciudad: document.getElementById('ciudad').value
         };
-        console.log(sessionStorage.getItem('usuario')); // Verifica qué contiene
+        console.log(sessionStorage.getItem('usuario')); 
 
         console.log(updatedUsuario)
         try {
@@ -155,7 +155,7 @@ function mostrarConfig() {
     }
         
 
-        // Resetear la animación (clave para que se vuelva a aplicar)
+
         config.classList.remove('rebote');
         void config.offsetWidth; // Forzar reflow
         config.classList.add('rebote');
@@ -465,11 +465,9 @@ async function eliminar(i) {
                 throw new Error(resultado.mensaje || 'Error al eliminar amigo');
             }
 
-            // Actualizar datos locales
             amigos.splice(i, 1);
             sessionStorage.setItem('amigos', JSON.stringify(amigos)); 
             
-            // Actualizar UI
             mostrarAmigos();
             Swal.fire({
                 icon: 'info',
@@ -477,8 +475,7 @@ async function eliminar(i) {
                 text: 'Amigo eliminado correctamente.',
                 confirmButtonColor: '#3085d6'
             });
-            
-            // Recargar la página
+
             location.reload();
 
         } catch (error) {

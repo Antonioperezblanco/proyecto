@@ -20,7 +20,6 @@ if (sessionStorage.getItem('origen') == 'crear' || sessionStorage.getItem('orige
 
     fecha.textContent = `${dia}/${mes}/${anio}`;
 
-     // Enviar al backend
     const usuario = JSON.parse(sessionStorage.getItem('usuario'));
     const datos = {
         fecha: fechaString,
@@ -182,7 +181,6 @@ function mostrarFiestas(fiestas) {
     contenedor.appendChild(div);
     contenedor.appendChild(div2);
 
-    // Ahora que el contenido está renderizado, puedes buscar los botones
     const btnFavorito = div.querySelector(".fav");
     const btnNo = div.querySelector(".dislike");
 

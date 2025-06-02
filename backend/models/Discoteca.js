@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import Fiesta from './Fiesta.js' 
 
-// Esquema extendido: Discoteca
 const discotecaSchema = new mongoose.Schema({
     nombre: { type: String, required: true },  
     precio: { type: Number, required: true }, 

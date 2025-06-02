@@ -3,13 +3,13 @@ const submit = document.getElementById("submit");
 const formInicio = document.querySelector("form");
 
 //Variables para mostrar la contraseña
-const mostrar = document.getElementById("show");  //Boton para mostrar contraseña
+const mostrar = document.getElementById("show"); 
 const pass = document.getElementById("pass");
 
 //Cambiar la forma de iniciar sesion
-const btnUsuario = document.getElementById("btnUsuario");    //Variable para iniciar sesión con nombre de usuario
-const btnCorreo = document.getElementById("btnCorreo");     //Variable para iniciar sesión con correo electrónico
-const labelRegistro = document.getElementById("registroLabel");     //label del inicio de sesión
+const btnUsuario = document.getElementById("btnUsuario");   
+const btnCorreo = document.getElementById("btnCorreo");    
+const labelRegistro = document.getElementById("registroLabel");     
 const registro = document.getElementById("registro"); 
 
 //Variables de errores
@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 btnUsuario.addEventListener("click", () => {
-    labelRegistro.textContent = "Nombre de usuario"  //Cambia el texto del label
-    registro.name = "nombre"  //Cambio el  atributo name
+    labelRegistro.textContent = "Nombre de usuario" 
+    registro.name = "nombre"  
     registro.type = "text"  
 });
 
@@ -33,9 +33,9 @@ btnCorreo.addEventListener("click", () => {
 });
 
 mostrar.addEventListener("click", (event) =>{
-    event.preventDefault();    //Evito que se envie el formulario al hacer click en el botón para mostrar la contraseña
+    event.preventDefault();   
     if(pass.type == "password"){ 
-        pass.type = "text"           //Al hacer click cambio el tipo del input password a text y el icono del ojo
+        pass.type = "text"  
         show.className = "fa-solid fa-eye-slash" 
     } else{
         pass.type = "password"
@@ -96,7 +96,6 @@ formInicio.addEventListener("submit", async function(event) {
         pass: pass.value
     };
 
-    // Definir si es correo o nombre de usuario
     if (registro.type === "email") {
         datos.correo = registro.value;
     } else {

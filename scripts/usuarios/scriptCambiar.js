@@ -1,8 +1,8 @@
 // Variables para mostrar la contraseña
-const mostrar = document.getElementById("show");  // Icono ojo
-const pass = document.getElementById("pass");   // Input contraseña
-const confPass = document.getElementById("confPass");   // Input confirmar contraseña
-const mostrarPass = document.getElementById("mostrarPass");  // Span texto icono
+const mostrar = document.getElementById("show"); 
+const pass = document.getElementById("pass");   
+const confPass = document.getElementById("confPass");   
+const mostrarPass = document.getElementById("mostrarPass"); 
 
 const submit = document.getElementById("submit");
 const formInicio = document.querySelector("form");

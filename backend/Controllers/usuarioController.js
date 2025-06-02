@@ -43,7 +43,6 @@ export const crearUsuario = async (req, res) => {
 
 export const inicioSesion = async (req, res) => {
     try {
-        console.log("Datos recibidos:", req.body);  // Verifica que los datos se están enviando
         const { nombreUsuario, correo, pass } = req.body;
 
         if (!(nombreUsuario || correo)) {
@@ -60,7 +59,7 @@ export const inicioSesion = async (req, res) => {
             return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
         }
 
-        console.log("Autenticación exitosa, redirigiendo...");  // Verifica que el código pase esta parte
+        console.log("Autenticación exitosa, redirigiendo...");
 
         const usuarioData = {
             id: usuario.id,
@@ -248,7 +247,6 @@ export const mostrarAmigos = async (req, res) => {
         console.log("Usuario:", nombreUsuario);
         console.log("Amigos:", usuario.amigos);
 
-        // Obtén los usuarios amigos
         const amigos = await Usuario.find({ id: { $in: amigosIds } });
 
         const amigosFiestas = [];
@@ -258,19 +256,16 @@ export const mostrarAmigos = async (req, res) => {
 
             if (fiestaIds.length === 0) continue;
 
-            // Buscar todas las Discotecas que coinciden con los ids y fecha
             const discotecas = await Discoteca.find({
                 id: { $in: fiestaIds },
                 fecha: { $gte: fechaInicio, $lte: fechaFin }
             });
 
-            // Buscar todas las Fiestas Privadas que coinciden con los ids y fecha
             const fiestasPrivadas = await FiestaPrivada.find({
                 id: { $in: fiestaIds },
                 fecha: { $gte: fechaInicio, $lte: fechaFin }
             });
 
-            // Combinar resultados
             const fiestaAmigo = [...discotecas, ...fiestasPrivadas];
 
             console.log(`Fiestas del amigo ${amigo.nombreUsuario}:`, fiestaAmigo);

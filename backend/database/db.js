@@ -10,5 +10,4 @@ const connectDB = async (url) => {
     }
 };
 
-// Exportar la función para usarla en otros archivos
 export default connectDB;

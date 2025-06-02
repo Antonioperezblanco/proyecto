@@ -1,7 +1,7 @@
 import Discoteca from '../models/Discoteca.js'
 import FiestaPrivada from '../models/FiestaPrivada.js'
 import { findDiscotecaById, findFiestaPrivadaById } from '../database/fiestaDB.js';
-import { findByUsername } from '../database/usuariosDB.js';
+import { findByUsername, saveUser } from '../database/usuariosDB.js';
 import Usuario from '../models/Usuario.js';
 import Counter from '../models/Counter.js';
 
@@ -84,7 +84,6 @@ export const buscarFiesta = async (req, res) => {
         console.log("Fecha de inicio:", fechaInicio);
         console.log("Fecha de fin:", fechaFin);
 
-        // Aquí haces la consulta sin las horas
         let fiestas = [];
 
         let query = {
@@ -137,42 +136,28 @@ export const unirseFiesta = async (req, res) => {
         if (!usuario) return res.status(404).json({ mensaje: "Usuario no encontrado" });
 
         const idNum = Number(fiesta.id);
-
         if (isNaN(idNum)) {
-        return res.status(400).json({ mensaje: "ID de fiesta inválido" });
+            return res.status(400).json({ mensaje: "ID de fiesta inválido" });
         }
-        
+
+        if (usuario.idFiestas.includes(idNum)) {
+            return res.status(400).json({ mensaje: "Ya estás apuntado a esta fiesta" });
+        }
+
         let fiestaDB;
-        
         if (fiesta.nombre) {
-        fiestaDB = await findDiscotecaById(idNum);
+            fiestaDB = await findDiscotecaById(idNum);
         } else {
-        fiestaDB = await findFiestaPrivadaById(idNum);
+            fiestaDB = await findFiestaPrivadaById(idNum);
         }
 
         if (!fiestaDB) return res.status(404).json({ mensaje: "Fiesta no encontrada" });
-
-        for (const idFiesta of usuario.idFiestas) {
-            let fiestaExistente = await findDiscotecaById(idFiesta);
-            if (!fiestaExistente){
-                fiestaExistente = await findFiestaPrivadaById(idFiesta);
-            }
-
-            if (fiestaExistente){
-                if (fiestaExistente.localizacion === fiestaDB.localizacion){
-                    return res.status(400).json({ mensaje: "Ya estas unido a esta fiesta" })
-                }
-            }
-
-        }
-
-        fiestaDB.contador += 1;
+        
+        fiestaDB.contador = (fiestaDB.contador || 0) + 1;
         await fiestaDB.save();
 
-        await Usuario.updateOne(
-            { nombreUsuario },
-            { $addToSet: { idFiestas: fiesta.id } }
-        );
+        usuario.idFiestas.push(idNum);
+        await usuario.save();
 
         res.status(200).json({ mensaje: 'Te has unido correctamente a la fiesta' });
 
@@ -181,6 +166,7 @@ export const unirseFiesta = async (req, res) => {
         res.status(500).json({ mensaje: 'Error al unirse a la fiesta' });
     }
 }
+
 
 export const cambiarCiudad = async (req, res) => {
     try {
@@ -194,7 +180,7 @@ export const cambiarCiudad = async (req, res) => {
         }
 
         let nuevaCiudad;
-        // Invertir la ciudad
+
         if (ciudad.toLowerCase() === 'madrid') {
             nuevaCiudad = 'Barcelona';
         } else if (ciudad.toLowerCase() === 'barcelona') {
@@ -254,4 +240,58 @@ export const getNextFiestaId = async () => {
     { new: true, upsert: true }
   );
   return counter.seq;
+};
+
+export const verFiestas = async (req, res) => {
+    const { nombreUsuario, desde } = req.body;
+
+    try {
+        const usuario = await findByUsername(nombreUsuario);
+        if (!usuario) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+
+        const idsFiestas = usuario.idFiestas || []; 
+        const desdeDate = new Date(desde);
+
+        const [discotecas, privadas] = await Promise.all([
+            Discoteca.find({
+                id: { $in: idsFiestas },
+                fecha: { $gte: desdeDate }
+            }),
+            FiestaPrivada.find({
+                id: { $in: idsFiestas },
+                fecha: { $gte: desdeDate }
+            })
+        ]);
+
+        const fiestas = [...discotecas, ...privadas];
+
+        res.json({ fiestas });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: "Error interno" });
+    }
+};
+
+export const desapuntarse = async (req, res) => {
+
+     const { nombreUsuario, idFiesta } = req.body;
+
+  try {
+    const usuario = await findByUsername(nombreUsuario);
+    if (!usuario) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+
+    usuario.idFiestas = usuario.idFiestas.filter(id => id !== idFiesta);
+
+    let fiesta = await findDiscotecaById(idFiesta);
+    if (!fiesta){
+        fiesta = await findFiestaPrivadaById(idFiesta)
+    }
+    fiesta.contador -= 1;
+    await saveUser(usuario);
+    await fiesta.save();
+    res.json({ mensaje: "Desapuntado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: "Error interno" });
+  }
 };
