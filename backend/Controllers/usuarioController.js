@@ -260,13 +260,13 @@ export const mostrarAmigos = async (req, res) => {
 
             // Buscar todas las Discotecas que coinciden con los ids y fecha
             const discotecas = await Discoteca.find({
-                idDiscoteca: { $in: fiestaIds },
+                id: { $in: fiestaIds },
                 fecha: { $gte: fechaInicio, $lte: fechaFin }
             });
 
             // Buscar todas las Fiestas Privadas que coinciden con los ids y fecha
             const fiestasPrivadas = await FiestaPrivada.find({
-                idFiestaPrivada: { $in: fiestaIds },
+                id: { $in: fiestaIds },
                 fecha: { $gte: fechaInicio, $lte: fechaFin }
             });
 

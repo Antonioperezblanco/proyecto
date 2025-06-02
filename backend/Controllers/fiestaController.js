@@ -3,7 +3,7 @@ import FiestaPrivada from '../models/FiestaPrivada.js'
 import { findDiscotecaById, findFiestaPrivadaById } from '../database/fiestaDB.js';
 import { findByUsername } from '../database/usuariosDB.js';
 import Usuario from '../models/Usuario.js';
-
+import Counter from '../models/Counter.js';
 
 export const crearFiesta = async (req, res) => {
  
@@ -15,6 +15,8 @@ export const crearFiesta = async (req, res) => {
         const precioCervezaNum = Number(precioCerveza);
         const precioRefrescoNum = Number(precioRefresco);
         const precioNum = Number(precio);
+
+        const nuevoId = await getNextFiestaId();
 
         if(tipo === 'fiestaPrivada'){
             const nuevaFiestaPrivada = new FiestaPrivada({
@@ -28,6 +30,7 @@ export const crearFiesta = async (req, res) => {
                 precioCerveza: precioCervezaNum || null,
                 precioRefresco :precioRefrescoNum || null,
                 tuAlcohol,
+                id: nuevoId,
             });
 
             console.log("Guardando una Fiesta Privada:", nuevaFiestaPrivada);
@@ -47,6 +50,7 @@ export const crearFiesta = async (req, res) => {
                 precioRefresco: precioRefrescoNum,
                 nombre,
                 precio: precioNum,
+                id: nuevoId,
             });
             console.log("Guardando una discoteca:", nuevaDiscoteca);
             await nuevaDiscoteca.save() 
@@ -242,3 +246,12 @@ export const cambiarCiudad = async (req, res) => {
         res.status(500).json({ mensaje: 'Error al buscar fiestas', error: error });
     }
 }
+
+export const getNextFiestaId = async () => {
+  const counter = await Counter.findOneAndUpdate(
+    { name: 'fiesta' },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+  return counter.seq;
+};

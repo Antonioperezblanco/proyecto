@@ -19,7 +19,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--light-color);
   padding: 1rem;
-   overflow: hidden;
+  overflow: hidden;
 }
 
 .busquedaContainer {

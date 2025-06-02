@@ -53,8 +53,8 @@ formInicio.addEventListener("submit", async function(event) {
         } else {
             Swal.fire({
             icon: 'error',
-            title: 'Oops...',
-            text: resultado.mensaje,
+            title: 'Vaya...',
+            text: "Correo no encontrado",
             confirmButtonColor: '#d33'
         });
         }

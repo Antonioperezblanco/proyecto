@@ -22,13 +22,13 @@
             <form method="post" action="http://127.0.0.1:3000/usuario/crear" class="login-form">
                 <div class="form-group">
                     <label for="nombreUsuario" class="form-label">Nombre de usuario:</label>
-                    <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control">
+                    <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control" maxlength="20">
                     <span id="nombreError" class="error-message"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="correo" class="form-label">Correo:</label>
-                    <input type="email" name="correo" id="correo" class="form-control">
+                    <input type="email" name="correo" id="correo" class="form-control" maxlength="25">
                     <span id="correoError" class="error-message"></span>
                 </div>
 

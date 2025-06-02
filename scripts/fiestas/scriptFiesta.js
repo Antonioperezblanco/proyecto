@@ -193,7 +193,7 @@ function mostrarFiestas(fiestas) {
 
             let fiestaParaEnviar = {
             ...fiesta,
-            id: fiesta.idDiscoteca || fiesta.idFiestaPrivada 
+            id: fiesta.id
             };
 
             try{
@@ -261,7 +261,6 @@ function mostrarFiestas(fiestas) {
                 if (!fiesta.tuAlcohol) {
                     infoDiv.innerHTML = `
                         <div class='text-dark p-3'>
-                            <p class='mt-2'><strong>Precio:</strong> ${fiesta.precio} €</p>
                             <p><strong>Localización:</strong> ${fiesta.localizacion}</p>
                             <p><strong>Hora inicio:</strong> ${fiesta.hora}</p>
                             <p><strong>Tipo de música:</strong> ${fiesta.musica}</p>
@@ -304,7 +303,7 @@ function mostrarDiscoteca(div, div2, fiesta) {
             `
             div.innerHTML = `
                 <div class="d-flex justify-content-between align-items-center w-100">
-                    <h3 class="mb-0">${fiesta.localizacion}</h3>
+                    <h3 class="mb-0">${fiesta.nombre}</h3>
                     <i class="fa-solid fa-bars info-icon" style="cursor:pointer;"></i>
                 </div>
                 <p class='mt-2'><strong>Ubicación:</strong> ${fiesta.localizacion}</p>

@@ -56,6 +56,7 @@ if (sessionStorage.getItem("origen") == "inicio" || sessionStorage.getItem("orig
             inputNombre.name="nombre";
             inputNombre.id="nombreDiscoteca";
             inputNombre.className ="form-control";
+            inputNombre.maxLength = "20";
 
             const nombreErr = document.createElement("span");
             nombreErr.id="nombreErr";

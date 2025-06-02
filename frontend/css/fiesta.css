@@ -134,6 +134,10 @@ h3.busca {
 
 
 @media (max-width: 768px) {
+  body{
+    overflow: visible;
+    margin-bottom: 100px;
+  }
   .sidebarAmigos {
     position: fixed;
     bottom: 0;
