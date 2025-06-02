@@ -21,6 +21,8 @@ function contarSolicitudes(){
     const solicitudesJSON = sessionStorage.getItem('solicitudes');
     if (JSON.parse(solicitudesJSON).length <9){
          numeroNotificaciones.textContent = JSON.parse(solicitudesJSON).length
+    }else if (sessionStorage.getItem("origen") == "crear"){
+        numeroNotificaciones.textContent = "0"
     }else{
         numeroNotificaciones.textContent = "9+"
     }
@@ -42,6 +44,7 @@ function cerrarSesion() {
         }).then((result) => {
             if (result.isConfirmed) {
                 sessionStorage.setItem("origen", "");
+                sessionStorage.setItem("usuario", "");
                 window.location.href = "/frontend/views/usuarios/InicioSesion.html";
             }
         });
@@ -282,7 +285,7 @@ async function mostrarSolicitudes() {
 
             lista.innerHTML = '';
 
-            if (solicitudes.length === 0) {
+            if (solicitudes.length === 0 || sessionStorage.getItem("origen") == "crear") {
                 lista.innerHTML = "<p style='color:black; text-align:center'>No tienes solicitudes</p>";
             } else {
                 solicitudes.forEach((sol, i) => {
@@ -400,7 +403,7 @@ async function mostrarAmigos() {
 
             lista.innerHTML = '';
 
-            if (amigos.length === 0) {
+            if (amigos.length === 0 || sessionStorage.getItem("origen") == "crear") {
                 lista.innerHTML = "<p style='color:black; text-align:center'>No tienes amigos</p>";
             } else {
                 amigos.forEach((ami, i) => {
